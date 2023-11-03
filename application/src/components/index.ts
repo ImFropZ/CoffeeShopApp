@@ -1,3 +1,4 @@
 import MenuItem from "./MenuItem";
+import CheckoutItem from "./CheckoutItem";
 
-export { MenuItem };
+export { MenuItem, CheckoutItem };

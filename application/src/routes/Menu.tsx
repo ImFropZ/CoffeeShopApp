@@ -1,4 +1,4 @@
-import { MenuItem } from "@/components";
+import { CheckoutItem, MenuItem } from "@/components";
 import { Input } from "@/components/ui/input";
 
 function Menu() {
@@ -15,7 +15,7 @@ function Menu() {
         </div>
         <div className="relative mt-2">
           <div className="overflow-y-auto absolute inset-0 grid grid-cols-[repeat(auto-fill,200px)] justify-center gap-2">
-            {Array.from({ length: 22 }).map((_, i) => (
+            {Array.from({ length: 22 }).map((_) => (
               <MenuItem
                 imageSrc="https://picsum.photos/200"
                 title="Foo"
@@ -31,21 +31,26 @@ function Menu() {
           <div className="font-bold">Order Number</div>
           <div>1st Nov 2023 - 14:00:00</div>
         </div>
-        <div className="h-auto"></div>
+        <div className="h-auto">
+          <CheckoutItem imageSrc="https://picsum.photos/200" title="bar" />
+        </div>
         <div className="py-4 border-t flex justify-between items-center">
           <div>
             <div>
               Total : <span>$10</span>
             </div>
             <div>
-              Discount(%) : <span>10%</span>
+              Discount(0%) : <span>10%</span>
             </div>
             <div>
               Checkout : <span>$9</span>
             </div>
           </div>
-          <div>
-            <button className="py-3 px-6 rounded-lg shadow outline outline-[1px] hover:bg-blue-200">
+          <div className="flex gap-2">
+            <button className="py-3 px-3 rounded-lg shadow outline outline-[2px] hover:bg-blue-200 font-bold">
+              Discount
+            </button>
+            <button className="py-3 px-6 rounded-lg shadow outline outline-[2px] hover:bg-green-200 font-bold">
               Checkout
             </button>
           </div>
