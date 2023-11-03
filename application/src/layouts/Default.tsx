@@ -7,11 +7,11 @@ interface DefaultProps {
 function Default({ children }: DefaultProps) {
   return (
     <div className="grid grid-rows-[auto,1fr] absolute inset-0">
-      <header className="flex py-4 bg-slate-500">
+      <header className="flex py-4 bg-slate-500 px-10">
         <img src="#" alt="#" />
-        <button className="ml-auto mr-4">Logout</button>
+        <button className="ml-auto mr-4 text-red-600 font-bold">Logout</button>
       </header>
-      <div className="grid grid-cols-[min(300px,10%),1fr] gap-x-2 h-full">
+      <div className="grid grid-cols-[min(300px,10%),1fr] h-full">
         <div className="bg-slate-400 h-full">
           <div className="flex mb-10 mt-4 gap-3 px-2">
             <img
@@ -22,7 +22,7 @@ function Default({ children }: DefaultProps) {
               height={50}
             />
             <div>
-              <h1>Username</h1>
+              <h1 className="font-bold">Username</h1>
               <p>Permission</p>
             </div>
           </div>
