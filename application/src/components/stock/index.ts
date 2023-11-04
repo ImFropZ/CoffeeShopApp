@@ -1,5 +1,5 @@
 export * from "./columns";
 
-import { DataTable } from "./data-table";
+import { StockDataTable } from "./stock-data-table";
 
-export { DataTable };
+export { StockDataTable };

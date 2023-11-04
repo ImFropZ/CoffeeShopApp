@@ -1,4 +1,4 @@
-import { DataTable, stockColumns } from "@/components/stock";
+import { StockDataTable, stockColumns } from "@/components/stock";
 
 // Mock data
 const data: any = [];
@@ -12,7 +12,7 @@ Array.from({ length: 1000 }).forEach((_, index) => {
 function Stock() {
   return (
     <div className="relative h-full">
-      <DataTable columns={stockColumns} data={data} />
+      <StockDataTable columns={stockColumns} data={data} />
     </div>
   );
 }

@@ -19,7 +19,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function StockDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -28,6 +28,8 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  console.log(table.getRowModel().rows[0].getAllCells());
 
   return (
     <div className="rounded-md border absolute inset-0 grid grid-rows-[auto,1fr]">
@@ -58,7 +60,16 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={
+                      cell.id.includes("actions")
+                        ? "w-[12rem] lg:w-[18rem]"
+                        : cell.id.includes("id")
+                        ? "w-[6rem]"
+                        : ""
+                    }
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

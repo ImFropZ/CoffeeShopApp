@@ -1,4 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
+import { Button } from "../ui/button";
 
 export type Stock = {
   id: string;
@@ -15,10 +16,15 @@ export const stockColumns: ColumnDef<Stock>[] = [
     header: "Name",
   },
   {
+    id: "actions",
     header: "Actions",
     cell: ({ row }) => {
       const stock = row.original;
-      return <div>{stock.id}</div>;
+      return (
+        <div>
+          <Button>View Details</Button>
+        </div>
+      );
     },
   },
 ];
