@@ -1,5 +1,17 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { StockItemDataTable } from ".";
 
 export type Stock = {
   id: string;
@@ -18,12 +30,38 @@ export const stockColumns: ColumnDef<Stock>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => {
-      const stock = row.original;
+    cell: () => {
+      // Mock Data
+      const data: StockItem[] = [];
+      Array.from({ length: 100 }).forEach((_, index) => {
+        data.push({
+          id: index + "",
+          expireDate: "2021-10-10",
+          quantity: 10,
+          price: 100,
+        });
+      });
+
       return (
-        <div>
-          <Button>View Details</Button>
-        </div>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">Edit Stock</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[42rem]">
+            <DialogHeader>
+              <DialogTitle>Edit stock items</DialogTitle>
+              <DialogDescription>
+                Make changes to your profile here. Click save when you're done.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="relative h-72">
+              <StockItemDataTable columns={stockItemColumns} data={data} />
+            </div>
+            <DialogFooter>
+              <Button type="submit">Save changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       );
     },
   },
@@ -55,8 +93,13 @@ export const stockItemColumns: ColumnDef<StockItem>[] = [
   },
   {
     header: "Actions",
-    accessorFn: (row) => {
-      return <div>{row.id}</div>;
+    cell: () => {
+      return (
+        <div className="flex gap-2">
+          <Button variant="outline">-</Button>
+          <Button variant="outline">+</Button>
+        </div>
+      );
     },
   },
 ];

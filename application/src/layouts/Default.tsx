@@ -6,7 +6,7 @@ interface DefaultProps {
 
 function Default({ children }: DefaultProps) {
   return (
-    <div className="grid grid-rows-[auto,1fr] absolute inset-0">
+    <div className="grid grid-rows-[auto,1fr] absolute inset-0 h-screen">
       <header className="flex py-2 bg-slate-500 px-10">
         <img
           src="https://avatars.githubusercontent.com/u/46731773?v=4"
