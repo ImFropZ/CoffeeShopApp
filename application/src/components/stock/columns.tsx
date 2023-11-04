@@ -2,6 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -9,8 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import { StockItemDataTable } from ".";
 
 export type Stock = {
@@ -51,14 +50,17 @@ export const stockColumns: ColumnDef<Stock>[] = [
             <DialogHeader>
               <DialogTitle>Edit stock items</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you're done.
+                Make changes to your stock items here. Click save when you're
+                done.
               </DialogDescription>
             </DialogHeader>
             <div className="relative h-72">
               <StockItemDataTable columns={stockItemColumns} data={data} />
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <DialogClose asChild>
+                <Button type="submit">Save changes</Button>
+              </DialogClose>
             </DialogFooter>
           </DialogContent>
         </Dialog>
