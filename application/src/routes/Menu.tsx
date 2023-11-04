@@ -3,14 +3,14 @@ import { Input } from "@/components/ui/input";
 
 function Menu() {
   return (
-    <div className="grid grid-cols-3 h-full">
-      <div className="px-2 grid grid-rows-[auto,1fr] h-full pb-2 col-span-2">
+    <div className="grid h-full grid-cols-3">
+      <div className="col-span-2 grid h-full grid-rows-[auto,1fr] px-2 pb-2">
         <div className="relative">
-          <Input placeholder="Search ..." className="mt-2 text-lg" />
+          <Input placeholder="Search..." className="mt-2 text-lg" />
           <img
             src="/assets/svg/search.svg"
             alt=""
-            className="absolute top-1/2 right-3 -translate-y-1/2 mt-1 opacity-75"
+            className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 opacity-75"
           />
         </div>
         <div className="relative mt-2">
@@ -27,20 +27,20 @@ function Menu() {
           </div>
         </div>
       </div>
-      <div className="border-l px-4 grid grid-rows-[auto,auto,1fr,auto]">
-        <div className="text-center font-bold text-xl py-4">Cart (4)</div>
-        <div className="border-y py-2 flex justify-between">
+      <div className="grid grid-rows-[auto,auto,1fr,auto] border-l px-4">
+        <div className="py-4 text-center text-xl font-bold">Cart (4)</div>
+        <div className="flex justify-between border-y py-2">
           <div className="font-bold">Order Number</div>
           <div>1st Nov 2023 - 14:00:00</div>
         </div>
-        <div className="h-auto relative">
+        <div className="relative h-auto">
           <div className="absolute inset-0 overflow-auto pr-4">
             {Array.from({ length: 24 }).map((_) => (
               <CheckoutItem imageSrc="https://picsum.photos/50" title="bar" />
             ))}
           </div>
         </div>
-        <div className="py-4 border-t flex justify-between items-center">
+        <div className="flex items-center justify-between border-t py-4">
           <div>
             <div>
               Total : <span>$10</span>
@@ -53,10 +53,10 @@ function Menu() {
             </div>
           </div>
           <div className="flex gap-2">
-            <button className="py-3 px-3 rounded-lg shadow outline outline-[2px] hover:bg-blue-200 font-bold">
+            <button className="rounded-lg px-3 py-3 font-bold shadow outline outline-[2px] outline-slate-400 hover:bg-blue-400 hover:text-white">
               Discount
             </button>
-            <button className="py-3 px-6 rounded-lg shadow outline outline-[2px] hover:bg-green-200 font-bold">
+            <button className="rounded-lg px-6 py-3 font-bold shadow outline outline-[2px] outline-slate-400 hover:bg-green-400 hover:text-white">
               Checkout
             </button>
           </div>

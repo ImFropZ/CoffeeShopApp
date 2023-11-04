@@ -6,18 +6,18 @@ interface DefaultProps {
 
 function Default({ children }: DefaultProps) {
   return (
-    <div className="grid grid-rows-[auto,1fr] absolute inset-0 h-screen">
-      <header className="flex py-2 bg-slate-500 px-10">
+    <div className="absolute inset-0 grid h-screen grid-rows-[auto,1fr]">
+      <header className="flex bg-slate-500 px-10 py-2">
         <img
           src="https://avatars.githubusercontent.com/u/46731773?v=4"
           alt="Logo"
           className="h-10"
         />
-        <button className="ml-auto mr-4 text-red-600 font-bold">Logout</button>
+        <button className="ml-auto mr-4 font-bold text-red-600">Logout</button>
       </header>
-      <div className="grid grid-cols-[auto,1fr] h-full">
-        <div className="bg-slate-400 h-full px-2">
-          <div className="flex mb-10 mt-4 gap-3 px-2">
+      <div className="grid h-full grid-cols-[auto,1fr]">
+        <div className="h-full bg-slate-400 px-2">
+          <div className="mb-10 mt-4 flex gap-3 px-2">
             <img
               src="https://avatars.githubusercontent.com/u/46731773?v=4"
               alt="#"
@@ -33,25 +33,25 @@ function Default({ children }: DefaultProps) {
           <nav className="flex flex-col items-center gap-5">
             <Link
               to={"/"}
-              className="bg-slate-300 w-2/3 py-1 text-center font-bold rounded hover:bg-slate-200"
+              className="w-2/3 rounded bg-slate-300 py-1 text-center font-bold hover:bg-slate-200"
             >
               Dashboard
             </Link>
             <Link
               to={"/menu"}
-              className="bg-slate-300 w-2/3 py-1 text-center font-bold rounded hover:bg-slate-200"
+              className="w-2/3 rounded bg-slate-300 py-1 text-center font-bold hover:bg-slate-200"
             >
               Menu
             </Link>
             <Link
               to={"/stock"}
-              className="bg-slate-300 w-2/3 py-1 text-center font-bold rounded hover:bg-slate-200"
+              className="w-2/3 rounded bg-slate-300 py-1 text-center font-bold hover:bg-slate-200"
             >
               Stock
             </Link>
             <Link
               to={"/setting"}
-              className="bg-slate-300 w-2/3 py-1 text-center font-bold rounded hover:bg-slate-200"
+              className="w-2/3 rounded bg-slate-300 py-1 text-center font-bold hover:bg-slate-200"
             >
               Setting
             </Link>
