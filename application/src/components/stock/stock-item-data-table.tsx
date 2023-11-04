@@ -32,7 +32,7 @@ export function StockItemDataTable<TData, TValue>({
   console.log(table.getRowModel().rows[0].getAllCells());
 
   return (
-    <div className="rounded-md border absolute inset-0 grid grid-rows-[auto,1fr]">
+    <div className="absolute inset-0 grid grid-rows-[auto,1fr] rounded-md border">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -44,7 +44,7 @@ export function StockItemDataTable<TData, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 );

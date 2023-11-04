@@ -1,7 +1,9 @@
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -13,6 +15,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import { Label } from "../ui/label";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -23,16 +39,56 @@ export function StockDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnFilters,
+    },
   });
 
-  console.log(table.getRowModel().rows[0].getAllCells());
-
   return (
-    <div className="rounded-md border absolute inset-0 grid grid-rows-[auto,1fr]">
+    <div className="absolute inset-0 grid grid-rows-[auto,1fr] rounded-md border">
+      <div className="flex items-center">
+        <Input
+          placeholder="Search..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("name")?.setFilterValue(event.target.value)
+          }
+          className="m-2 w-1/3 text-lg"
+        />
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="ml-auto mr-2" variant="outline">
+              Add
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[42rem]">
+            <DialogHeader>
+              <DialogTitle>Add new stock</DialogTitle>
+              <DialogDescription>
+                Fill in the details of the new stock item here. Click save when
+                you're done.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="relative">
+              <Label>Name</Label>
+              <Input />
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="submit">Save changes</Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -44,7 +100,7 @@ export function StockDataTable<TData, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 );
