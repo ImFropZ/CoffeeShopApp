@@ -14,14 +14,16 @@ function Menu() {
           />
         </div>
         <div className="relative mt-2">
-          <div className="overflow-y-auto absolute inset-0 grid grid-cols-[repeat(auto-fill,200px)] justify-center gap-2">
-            {Array.from({ length: 22 }).map((_) => (
-              <MenuItem
-                imageSrc="https://picsum.photos/200"
-                title="Foo"
-                className=""
-              ></MenuItem>
-            ))}
+          <div className="absolute inset-0 overflow-y-auto">
+            <div className="grid grid-cols-[repeat(auto-fill,200px)] grid-rows-[repeat(auto-fill,auto)] justify-center gap-2">
+              {Array.from({ length: 24 }).map((_) => (
+                <MenuItem
+                  imageSrc="https://picsum.photos/200"
+                  title="Foo"
+                  className=""
+                ></MenuItem>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -31,8 +33,12 @@ function Menu() {
           <div className="font-bold">Order Number</div>
           <div>1st Nov 2023 - 14:00:00</div>
         </div>
-        <div className="h-auto">
-          <CheckoutItem imageSrc="https://picsum.photos/200" title="bar" />
+        <div className="h-auto relative">
+          <div className="absolute inset-0 overflow-auto pr-4">
+            {Array.from({ length: 24 }).map((_) => (
+              <CheckoutItem imageSrc="https://picsum.photos/50" title="bar" />
+            ))}
+          </div>
         </div>
         <div className="py-4 border-t flex justify-between items-center">
           <div>
