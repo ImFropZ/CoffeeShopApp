@@ -7,16 +7,12 @@ interface DefaultProps {
 function Default({ children }: DefaultProps) {
   return (
     <div className="absolute inset-0 grid h-screen grid-rows-[auto,1fr]">
-      <header className="flex bg-slate-500 px-10 py-2">
-        <img
-          src="https://avatars.githubusercontent.com/u/46731773?v=4"
-          alt="Logo"
-          className="h-10"
-        />
+      <header className="flex bg-gray-700 p-3 shadow">
+        <img src="assets/logo/logo_name@3x.png" alt="Logo" className="h-10" />
         <button className="ml-auto mr-4 font-bold text-red-600">Logout</button>
       </header>
       <div className="grid h-full grid-cols-[auto,1fr]">
-        <div className="h-full bg-slate-400 px-2">
+        <div className="h-full border-r-2 bg-slate-100 px-2">
           <div className="mb-10 mt-4 flex gap-3 px-2">
             <img
               src="https://avatars.githubusercontent.com/u/46731773?v=4"
