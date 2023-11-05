@@ -11,6 +11,17 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { StockItemDataTable } from ".";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
 export type Stock = {
   id: string;
@@ -98,10 +109,33 @@ export const stockItemColumns: ColumnDef<StockItem>[] = [
     header: "Actions",
     cell: () => {
       return (
-        <div className="flex gap-2">
-          <Button variant="outline">-</Button>
-          <Button variant="outline">+</Button>
-        </div>
+        <AlertDialog>
+          <div className="flex gap-2">
+            <Button variant="outline">-</Button>
+            <Button variant="outline">+</Button>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="bg-red-500 text-white hover:bg-red-600 hover:text-white"
+              >
+                x
+              </Button>
+            </AlertDialogTrigger>
+          </div>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                The remove actions will not create a stock report. You can
+                decrease the quantity instead.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       );
     },
   },
