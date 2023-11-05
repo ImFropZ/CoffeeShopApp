@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "application",
-    "version": "0.0.0"
+    "productName": "Coffee Shop System",
+    "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {
@@ -21,7 +21,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "com.coffee.shop.system",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -36,10 +36,11 @@
     "windows": [
       {
         "fullscreen": false,
-        "resizable": false,
-        "title": "application",
-        "width": 1366,
-        "height": 768
+        "title": "Coffee Shop System",
+        "minHeight": 768,
+        "minWidth": 1366,
+        "minimizable": true,
+        "maximizable": true
       }
     ]
   }
