@@ -53,28 +53,51 @@ export const stockColumns: ColumnDef<Stock>[] = [
       });
 
       return (
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline">Edit Stock</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[42rem]">
-            <DialogHeader>
-              <DialogTitle>Edit stock items</DialogTitle>
-              <DialogDescription>
-                Make changes to your stock items here. Click save when you're
-                done.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="relative h-72">
-              <StockItemDataTable columns={stockItemColumns} data={data} />
-            </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button type="submit">Save changes</Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <AlertDialog>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">Edit Stock</Button>
+            </DialogTrigger>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="ml-2 bg-red-500 text-white hover:bg-red-600 hover:text-white"
+              >
+                Remove
+              </Button>
+            </AlertDialogTrigger>
+            <DialogContent className="sm:max-w-[42rem]">
+              <DialogHeader>
+                <DialogTitle>Edit stock items</DialogTitle>
+                <DialogDescription>
+                  Make changes to your stock items here. Click save when you're
+                  done.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="relative h-72">
+                <StockItemDataTable columns={stockItemColumns} data={data} />
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button type="submit">Save changes</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                The remove actions will not create a stock report. You can
+                decrease the quantity instead.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       );
     },
   },
