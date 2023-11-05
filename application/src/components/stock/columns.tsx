@@ -82,6 +82,7 @@ export const stockItemColumns: ColumnDef<StockItem>[] = [
     header: "ID",
   },
   {
+    id: "expireDate",
     accessorKey: "expireDate",
     header: "Expire Date",
   },

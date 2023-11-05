@@ -73,7 +73,7 @@ export function StockDataTable<TData, TValue>({
             <DialogHeader>
               <DialogTitle>Add new stock</DialogTitle>
               <DialogDescription>
-                Fill in the details of the new stock item here. Click save when
+                Fill in the details of the new stock here. Click save when
                 you're done.
               </DialogDescription>
             </DialogHeader>

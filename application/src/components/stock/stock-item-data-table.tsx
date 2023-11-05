@@ -1,10 +1,11 @@
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -13,6 +14,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "../ui/input";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
+import { useState } from "react";
+import { format } from "date-fns";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -23,16 +39,64 @@ export function StockItemDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnFilters,
+    },
   });
-
-  console.log(table.getRowModel().rows[0].getAllCells());
 
   return (
     <div className="absolute inset-0 grid grid-rows-[auto,1fr] rounded-md border">
+      <div className="flex items-center">
+        <Input
+          placeholder="Search..."
+          value={
+            (table.getColumn("expireDate")?.getFilterValue() as string) ?? ""
+          }
+          onChange={(event) =>
+            table.getColumn("expireDate")?.setFilterValue(event.target.value)
+          }
+          className="m-2 w-1/3 text-lg"
+        />
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="ml-auto mr-2" variant="outline">
+              Add
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[42rem]">
+            <DialogHeader>
+              <DialogTitle>Add new stock item</DialogTitle>
+              <DialogDescription>
+                Fill in the details of the new stock item here. Click save when
+                you're done.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="relative">
+              <Label>Expire Date</Label>
+              <Input
+                type="date"
+                defaultValue={format(new Date(), "yyyy-MM-dd")}
+              />
+              <Label>Quantity</Label>
+              <Input type="number" defaultValue={1} />
+              <Label>Price</Label>
+              <Input type="number" defaultValue={1} />
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="submit">Save changes</Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
