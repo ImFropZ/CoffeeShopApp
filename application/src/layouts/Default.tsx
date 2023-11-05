@@ -13,7 +13,7 @@ function Default({ children }: DefaultProps) {
       </header>
       <div className="grid h-full grid-cols-[auto,1fr]">
         <div className="h-full border-r-2 bg-slate-100 px-2">
-          <div className="mb-10 mt-4 flex gap-3 px-2">
+          <div className="my-4 flex gap-3 px-2">
             <img
               src="https://avatars.githubusercontent.com/u/46731773?v=4"
               alt="#"
@@ -26,28 +26,28 @@ function Default({ children }: DefaultProps) {
               <p>Permission</p>
             </div>
           </div>
-          <nav className="flex flex-col items-center gap-5">
+          <nav className="flex flex-col items-center gap-5 border-t-2 border-slate-700 pt-5">
             <Link
               to={"/"}
-              className="w-2/3 rounded bg-slate-300 py-1 text-center font-bold hover:bg-slate-200"
+              className="w-4/5 rounded bg-slate-200 py-2 text-center font-bold text-slate-800 hover:bg-slate-300"
             >
               Dashboard
             </Link>
             <Link
               to={"/menu"}
-              className="w-2/3 rounded bg-slate-300 py-1 text-center font-bold hover:bg-slate-200"
+              className="w-4/5 rounded bg-slate-200 py-2 text-center font-bold text-slate-800 hover:bg-slate-300"
             >
               Menu
             </Link>
             <Link
               to={"/stock"}
-              className="w-2/3 rounded bg-slate-300 py-1 text-center font-bold hover:bg-slate-200"
+              className="w-4/5 rounded bg-slate-200 py-2 text-center font-bold text-slate-800 hover:bg-slate-300"
             >
               Stock
             </Link>
             <Link
               to={"/setting"}
-              className="w-2/3 rounded bg-slate-300 py-1 text-center font-bold hover:bg-slate-200"
+              className="w-4/5 rounded bg-slate-200 py-2 text-center font-bold text-slate-800 hover:bg-slate-300"
             >
               Setting
             </Link>
