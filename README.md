@@ -1,7 +1,40 @@
-# Tauri + React + Typescript
+<h1 style="text-align:center;">Coffee Shop System</h1>
+<p style="text-align:center;color:yellow;">This project is still in progress.<br> The GUI and features are subject to change in the future.</p>
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+# Technologies
 
-## Recommended IDE Setup
+- [React](https://react.dev/) : Frontend
+- [Tauri](https://tauri.app/) : Window Application
+- [Shadcn](https://ui.shadcn.com/) : Component
+- [React-Icons](https://react-icons.github.io/react-icons/) : Interface Icon
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+# Project Images
+
+## Login
+
+![](https://imgur.com/GKUbJtv.jpg)
+
+## Menu
+
+![](https://imgur.com/U4pD0zm.jpg)
+
+## Stock
+
+![](https://imgur.com/HywU1qu.jpg)
+
+### Add stock modal
+
+![](https://imgur.com/ZNg8o3G.jpg)
+
+### Edit stock modal
+
+![](https://imgur.com/5Hc9okW.jpg)
+
+### Add stock item modal
+
+![](https://imgur.com/ReYSKUa.jpg)
+
+### Remove warning
+
+![](https://imgur.com/tZy5BpP.jpg)
+
