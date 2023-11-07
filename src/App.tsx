@@ -1,8 +1,16 @@
-import { Routes, Route, Outlet } from "react-router-dom";
-import { Dashboard, Menu, Stock, Setting, Login } from "./routes";
+import { Routes, Route, Outlet, Navigate } from "react-router-dom";
+import { Dashboard, Menu, Stock, Login } from "./routes";
 import { Authentication } from "./routes/helpers";
 import Unauthentication from "./routes/helpers/Unauthentication";
 import { Default, SettingLayout } from "./layouts";
+import {
+  ProfileSetting,
+  ManageUserSetting,
+  ManageCustomerSetting,
+  ReportInvoiceSetting,
+  ReportStockSetting,
+  ReportLifetimeSetting,
+} from "./routes/settings";
 
 function App() {
   return (
@@ -16,9 +24,9 @@ function App() {
             </Default>
           }
         >
-          <Route path="/" element={<Dashboard />}></Route>
-          <Route path="/menu" element={<Menu />}></Route>
-          <Route path="/stock" element={<Stock />}></Route>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/stock" element={<Stock />} />
           <Route
             path="/setting"
             element={
@@ -27,12 +35,40 @@ function App() {
               </SettingLayout>
             }
           >
-            <Route path="/setting" element={<Setting />}></Route>
+            <Route path="/setting/profile" element={<ProfileSetting />} />
+            <Route
+              path="/setting/manage-user"
+              element={<ManageUserSetting />}
+            />
+            <Route
+              path="/setting/manage-customer"
+              element={<ManageCustomerSetting />}
+            />
+            <Route
+              path="/setting/report-invoice"
+              element={<ReportInvoiceSetting />}
+            />
+            <Route
+              path="/setting/report-stock"
+              element={<ReportStockSetting />}
+            />
+            <Route
+              path="/setting/report-lifetime"
+              element={<ReportLifetimeSetting />}
+            />
+            <Route
+              path="/setting"
+              element={<Navigate to="/setting/profile" />}
+            />
+            <Route
+              path="/setting/*"
+              element={<Navigate to="/setting/profile" />}
+            />
           </Route>
         </Route>
       </Route>
       <Route path="/" element={<Unauthentication />}>
-        <Route path="/login" element={<Login />}></Route>
+        <Route path="/login" element={<Login />} />
       </Route>
     </Routes>
   );
