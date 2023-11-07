@@ -9,13 +9,13 @@ interface CheckoutItemProps {
 
 function CheckoutItem({ title, imageSrc }: CheckoutItemProps) {
   return (
-    <div className="my-2 border-y-[1px] py-2 relative">
-      <div className="flex gap-2 items-center">
+    <div className="relative my-2 border-y-[1px] py-2">
+      <div className="flex items-center gap-2">
         <img
           src={imageSrc}
           alt={title}
           width={64}
-          className="rounded aspect-square"
+          className="aspect-square rounded"
         />
         <div>
           {title} - {"M"} - {"100%"}
@@ -26,9 +26,9 @@ function CheckoutItem({ title, imageSrc }: CheckoutItemProps) {
         <span className="text-lg">Quantity</span>
         <Input type="number" className="w-32" defaultValue={1} />
       </div>
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <span className="text-lg">Cup Size</span>
-        <RadioGroup defaultValue="small" className="flex my-2">
+        <RadioGroup defaultValue="small" className="my-2 flex">
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="small" id="small" defaultChecked />
             <Label htmlFor="small">Small</Label>
@@ -47,8 +47,10 @@ function CheckoutItem({ title, imageSrc }: CheckoutItemProps) {
         <span className="text-lg">Sugar(%)</span>
         <Input type="number" className="w-32" defaultValue={100} />
       </div>
-      <div className="absolute top-0 right-2 text-red-600">
-        <button>Remove</button>
+      <div className="absolute right-0 top-0 h-6 w-6 rounded-full text-red-600 hover:bg-slate-200">
+        <button className="p-1">
+          <img src="/assets/svg/cross.svg" alt="" />
+        </button>
       </div>
     </div>
   );
