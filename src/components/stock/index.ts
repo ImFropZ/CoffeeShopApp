@@ -1,6 +1,3 @@
-export * from "./columns";
-
-import { StockDataTable } from "./stock-data-table";
-import { StockItemDataTable } from "./stock-item-data-table";
-
-export { StockDataTable, StockItemDataTable };
+export * from "./stock-columns";
+export * from "./stock-data-table";
+export * from "./stock-item-data-table";
