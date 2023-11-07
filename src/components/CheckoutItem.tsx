@@ -1,6 +1,7 @@
 import { Input } from "./ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { LuX } from "react-icons/lu";
 
 interface CheckoutItemProps {
   title: string;
@@ -47,9 +48,9 @@ function CheckoutItem({ title, imageSrc }: CheckoutItemProps) {
         <span className="text-lg">Sugar(%)</span>
         <Input type="number" className="w-32" defaultValue={100} />
       </div>
-      <div className="absolute right-0 top-0 h-6 w-6 rounded-full text-red-600 hover:bg-slate-200">
+      <div className="absolute right-0 top-0 h-6 w-6 rounded-full hover:bg-slate-200">
         <button className="p-1">
-          <img src="/assets/svg/cross.svg" alt="" />
+          <LuX className="text-red-600" />
         </button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { CheckoutItem, MenuItem } from "@/components";
 import { Input } from "@/components/ui/input";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 function Menu() {
   return (
@@ -7,11 +8,7 @@ function Menu() {
       <div className="col-span-2 grid h-full grid-rows-[auto,1fr] px-2 pb-2">
         <div className="relative">
           <Input placeholder="Search..." className="mt-2 text-lg" />
-          <img
-            src="/assets/svg/search.svg"
-            alt=""
-            className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 opacity-75"
-          />
+          <FaMagnifyingGlass className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 opacity-75" />
         </div>
         <div className="relative mt-2">
           <div className="absolute inset-0 overflow-y-auto">
