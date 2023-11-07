@@ -1,7 +1,6 @@
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { Dashboard, Menu, Stock, Login } from "./routes";
-import { Authentication } from "./routes/helpers";
-import Unauthentication from "./routes/helpers/Unauthentication";
+import { Authentication, Unauthentication } from "./routes/helpers";
 import { Default, SettingLayout } from "./layouts";
 import {
   ProfileSetting,
