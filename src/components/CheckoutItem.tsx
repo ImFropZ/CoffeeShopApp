@@ -1,7 +1,9 @@
 import { Input } from "./ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useState } from "react";
 import { LuX } from "react-icons/lu";
+import { Skeleton } from "./ui/skeleton";
 
 interface CheckoutItemProps {
   title: string;
@@ -9,14 +11,21 @@ interface CheckoutItemProps {
 }
 
 function CheckoutItem({ title, imageSrc }: CheckoutItemProps) {
+  const [isImageLoaded, setImageLoaded] = useState<boolean>(false);
+
   return (
     <div className="relative my-2 border-y-[1px] py-2">
       <div className="flex items-center gap-2">
+        {!isImageLoaded ? <Skeleton className="aspect-square w-16" /> : null}
         <img
           src={imageSrc}
           alt={title}
-          width={64}
-          className="aspect-square rounded"
+          className={
+            "aspect-square w-16 rounded " + (!isImageLoaded && "hidden")
+          }
+          onLoad={() => {
+            setImageLoaded(true);
+          }}
         />
         <div>
           {title} - {"M"} - {"100%"}
