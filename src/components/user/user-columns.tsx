@@ -38,7 +38,7 @@ import {
 export type User = {
   id: string;
   name: string;
-  permissions: string[];
+  permission: string;
   picture: string;
 };
 
@@ -52,8 +52,8 @@ export const userColumns: ColumnDef<User>[] = [
     header: "Name",
   },
   {
-    accessorKey: "permissions",
-    header: "Permissions",
+    accessorKey: "permission",
+    header: "Permission",
   },
   {
     header: "Picture",

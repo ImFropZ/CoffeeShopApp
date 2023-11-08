@@ -6,7 +6,7 @@ Array.from({ length: 100 }).forEach((_, index) => {
   data.push({
     id: index + 1 + "",
     name: "Lim Tangmeng",
-    permissions: ["admin", "contributor"],
+    permission: "admin",
     picture: "https://github.com/imfropz.png",
   });
 });
