@@ -3,7 +3,7 @@ import ManageUserSetting from "./ManageUserSetting";
 import ManageCustomerSetting from "./ManageCustomerSetting";
 import ReportInvoiceSetting from "./ReportInvoiceSetting";
 import ReportStockSetting from "./ReportStockSetting";
-import ReportLifetimeSetting from "./ReportLifetimeSetting";
+import GeneralSetting from "./GeneralSetting";
 
 export {
   ProfileSetting,
@@ -11,5 +11,5 @@ export {
   ManageCustomerSetting,
   ReportInvoiceSetting,
   ReportStockSetting,
-  ReportLifetimeSetting,
+  GeneralSetting,
 };

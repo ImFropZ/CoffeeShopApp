@@ -8,7 +8,7 @@ import {
   ManageCustomerSetting,
   ReportInvoiceSetting,
   ReportStockSetting,
-  ReportLifetimeSetting,
+  GeneralSetting,
 } from "./routes/settings";
 
 function App() {
@@ -34,6 +34,7 @@ function App() {
               </SettingLayout>
             }
           >
+            <Route path="/setting" element={<GeneralSetting />} />
             <Route path="/setting/profile" element={<ProfileSetting />} />
             <Route
               path="/setting/manage-user"
@@ -51,18 +52,7 @@ function App() {
               path="/setting/report-stock"
               element={<ReportStockSetting />}
             />
-            <Route
-              path="/setting/report-lifetime"
-              element={<ReportLifetimeSetting />}
-            />
-            <Route
-              path="/setting"
-              element={<Navigate to="/setting/profile" />}
-            />
-            <Route
-              path="/setting/*"
-              element={<Navigate to="/setting/profile" />}
-            />
+            <Route path="/setting/*" element={<Navigate to="/setting" />} />
           </Route>
         </Route>
       </Route>

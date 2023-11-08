@@ -11,6 +11,11 @@ function SettingLayout({ children }: SettingLayoutProps) {
     <div className="grid h-full grid-cols-[auto,1fr]">
       <nav className="relative flex h-full flex-col border-r-2">
         <div className="flex flex-col">
+          <Link to="/setting">
+            <Button variant="ghost" className="w-full justify-start text-base">
+              General
+            </Button>
+          </Link>
           <Label className="my-2 px-2 text-xl font-bold">Manage</Label>
           <Link to="/setting/manage-user">
             <Button variant="ghost" className="w-full justify-start text-base">
@@ -35,14 +40,9 @@ function SettingLayout({ children }: SettingLayoutProps) {
               Stock
             </Button>
           </Link>
-          <Link to="/setting/report-lifetime">
-            <Button variant="ghost" className="w-full justify-start text-base">
-              Lifetime
-            </Button>
-          </Link>
         </div>
         <div className="mt-auto text-center">
-          <Link to="/setting/user">
+          <Link to="/setting/profile">
             <Button variant="ghost" className="px-10 text-base">
               Profile Setting
             </Button>
