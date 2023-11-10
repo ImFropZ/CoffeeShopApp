@@ -10,15 +10,27 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
+import {
+  endOfWeek,
+  format,
+  startOfWeek,
+  startOfMonth,
+  endOfMonth,
+  startOfYear,
+  endOfYear,
+} from "date-fns";
 import { useState } from "react";
 import { Pie } from "react-chartjs-2";
-import { FaFileExcel } from "react-icons/fa6";
+import { DateRange } from "react-day-picker";
+import { FaFileExcel, FaGreaterThan, FaLessThan } from "react-icons/fa6";
 
 function ReportInvoiceSetting() {
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<DateRange>({
+    from: new Date(),
+    to: new Date(),
+  });
   const [reportType, setReportType] = useState<
-    "daily" | "weekly" | "monthly" | "yearly"
+    "daily" | "weekly" | "monthly" | "yearly" | "custom"
   >("daily");
 
   return (
@@ -29,30 +41,49 @@ function ReportInvoiceSetting() {
             <Button
               variant={"outline"}
               className={cn(
-                "w-[280px] justify-start text-left font-normal",
+                "w-1/3 justify-start text-left font-normal",
                 !date && "text-muted-foreground",
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
+              {date.from && date.to ? (
+                date.from == date.to ? (
+                  format(date.from, "PPP")
+                ) : (
+                  `${format(date.from, "PPP")} - ${format(date.to, "PPP")}`
+                )
+              ) : (
+                <span>Pick a date</span>
+              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
             <Calendar
-              mode="single"
+              mode="range"
               selected={date}
               onSelect={(e) => {
+                setReportType("custom");
                 if (e) setDate(e);
               }}
               initialFocus
             />
           </PopoverContent>
         </Popover>
-        <Tabs>
+        <Button variant="outline">
+          <FaLessThan />
+        </Button>
+        <Button variant="outline">
+          <FaGreaterThan />
+        </Button>
+        <Tabs className="ml-auto">
           <TabItem
             value="Daily"
             data-active={reportType === "daily" ? true : undefined}
             onClick={() => {
+              setDate({
+                from: new Date(),
+                to: new Date(),
+              });
               setReportType("daily");
             }}
           />
@@ -60,6 +91,10 @@ function ReportInvoiceSetting() {
             value="Weekly"
             data-active={reportType === "weekly" ? true : undefined}
             onClick={() => {
+              setDate({
+                from: startOfWeek(new Date()),
+                to: endOfWeek(new Date()),
+              });
               setReportType("weekly");
             }}
           />
@@ -67,6 +102,10 @@ function ReportInvoiceSetting() {
             value="Monthly"
             data-active={reportType === "monthly" ? true : undefined}
             onClick={() => {
+              setDate({
+                from: startOfMonth(new Date()),
+                to: endOfMonth(new Date()),
+              });
               setReportType("monthly");
             }}
           />
@@ -74,11 +113,20 @@ function ReportInvoiceSetting() {
             value="Yearly"
             data-active={reportType === "yearly" ? true : undefined}
             onClick={() => {
+              setDate({
+                from: startOfYear(new Date()),
+                to: endOfYear(new Date()),
+              });
               setReportType("yearly");
             }}
           />
+          <TabItem
+            value="Custom"
+            className="cursor-not-allowed text-slate-400"
+            data-active={reportType === "custom" ? true : undefined}
+          />
         </Tabs>
-        <Button variant="outline" className="ml-auto">
+        <Button variant="outline">
           <FaFileExcel className="scale-125 text-green-700" />
         </Button>
       </div>
