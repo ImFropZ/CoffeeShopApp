@@ -6,10 +6,9 @@ import {
   ProfileSetting,
   ManageUserSetting,
   ManageCustomerSetting,
-  ReportInvoiceSetting,
-  ReportStockSetting,
   GeneralSetting,
 } from "./routes/settings";
+import { InvoiceReport, StockReport } from "./routes/reports";
 
 function App() {
   return (
@@ -26,6 +25,10 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/stock" element={<Stock />} />
+          <Route path="/report" element={<Outlet />}>
+            <Route path="/report/invoice" element={<InvoiceReport />} />
+            <Route path="/report/stock" element={<StockReport />} />
+          </Route>
           <Route
             path="/setting"
             element={
@@ -44,14 +47,7 @@ function App() {
               path="/setting/manage-customer"
               element={<ManageCustomerSetting />}
             />
-            <Route
-              path="/setting/report-invoice"
-              element={<ReportInvoiceSetting />}
-            />
-            <Route
-              path="/setting/report-stock"
-              element={<ReportStockSetting />}
-            />
+
             <Route path="/setting/*" element={<Navigate to="/setting" />} />
           </Route>
         </Route>

@@ -24,7 +24,7 @@ import { Pie } from "react-chartjs-2";
 import { DateRange } from "react-day-picker";
 import { FaFileExcel, FaGreaterThan, FaLessThan } from "react-icons/fa6";
 
-function ReportInvoiceSetting() {
+function InvoiceReport() {
   const [date, setDate] = useState<DateRange>({
     from: new Date(),
     to: new Date(),
@@ -34,7 +34,7 @@ function ReportInvoiceSetting() {
   >("daily");
 
   return (
-    <div className="grid grid-rows-[auto,1fr] p-2">
+    <div className="grid h-full grid-rows-[auto,1fr] p-2">
       <div className="flex gap-2 p-2">
         <Popover>
           <PopoverTrigger asChild>
@@ -201,4 +201,4 @@ function ReportInvoiceSetting() {
   );
 }
 
-export default ReportInvoiceSetting;
+export default InvoiceReport;

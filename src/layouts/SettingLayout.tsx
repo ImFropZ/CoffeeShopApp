@@ -28,19 +28,6 @@ function SettingLayout({ children }: SettingLayoutProps) {
             </Button>
           </Link>
         </div>
-        <div className="flex flex-col">
-          <Label className="my-2 px-2 text-xl font-bold">Report</Label>
-          <Link to="/setting/report-invoice">
-            <Button variant="ghost" className="w-full justify-start text-base">
-              Invoice
-            </Button>
-          </Link>
-          <Link to="/setting/report-stock">
-            <Button variant="ghost" className="w-full justify-start text-base">
-              Stock
-            </Button>
-          </Link>
-        </div>
         <div className="mt-auto text-center">
           <Link to="/setting/profile">
             <Button variant="ghost" className="px-10 text-base">
