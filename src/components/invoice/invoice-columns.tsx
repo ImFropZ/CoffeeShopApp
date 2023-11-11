@@ -1,18 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { LuPrinter } from "react-icons/lu";
 import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import { Customer } from "../customer";
 import { User } from "../user";
 
