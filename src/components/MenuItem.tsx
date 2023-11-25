@@ -11,13 +11,6 @@ import {
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import { Textarea } from "./ui/textarea";
 
 interface MenuItemProps extends HTMLAttributes<HTMLDivElement> {
@@ -27,6 +20,9 @@ interface MenuItemProps extends HTMLAttributes<HTMLDivElement> {
 
 function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
   const [isImageLoaded, setImageLoaded] = useState<boolean>(false);
+  const [cupSize, setCupSize] = useState<"SMALL" | "MEDIUM" | "LARGE">("SMALL");
+  const [sugarLevel, setSugarLevel] = useState<number>(0.25);
+
   return (
     <Dialog>
       <DialogTrigger>
@@ -60,48 +56,83 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
           </div>
           <div className="flex w-full flex-col justify-between gap-10 md:flex-row">
             <div className="w-full">
-              <Label>Size</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Size" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="SMALL">Small</SelectItem>
-                  <SelectItem value="MEDIUM">Medium</SelectItem>
-                  <SelectItem value="LARGE">Large</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label className="text-xl font-bold">Size</Label>
+              <div className="mt-2 flex gap-2">
+                <div
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline data-[active]:outline-slate-300"
+                  data-active={cupSize === "SMALL" ? true : undefined}
+                  onClick={() => {
+                    setCupSize("SMALL");
+                  }}
+                >
+                  S
+                </div>
+                <div
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline data-[active]:outline-slate-300"
+                  data-active={cupSize === "MEDIUM" ? true : undefined}
+                  onClick={() => {
+                    setCupSize("MEDIUM");
+                  }}
+                >
+                  M
+                </div>
+                <div
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline data-[active]:outline-slate-300"
+                  data-active={cupSize === "LARGE" ? true : undefined}
+                  onClick={() => {
+                    setCupSize("LARGE");
+                  }}
+                >
+                  L
+                </div>
+              </div>
             </div>
             <div className="w-full">
-              <Label>Quantity</Label>
-              <Input type="number" value={1} />
+              <Label className="text-xl font-bold">Quantity</Label>
+              <Input type="number" value={1} className="mt-2" />
             </div>
           </div>
-          <div className="my-2 flex w-full justify-between gap-10">
+          <div className="my-2 mt-5 flex w-full justify-between gap-10">
             <div className="w-full">
-              <Label>Sugar Levels</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sugar Levels" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0.25">25%</SelectItem>
-                  <SelectItem value="0.50">50%</SelectItem>
-                  <SelectItem value="0.75">75%</SelectItem>
-                  <SelectItem value="1">100%</SelectItem>
-                  <SelectItem value="1.25">125%</SelectItem>
-                  <SelectItem value="1.50">150%</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label className="text-xl font-bold">Sugar Levels</Label>
+              <div className="mt-2 flex gap-2">
+                <div
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-sm outline-none outline data-[active]:outline-slate-300"
+                  data-active={sugarLevel === 0.25 ? true : undefined}
+                  onClick={() => {
+                    setSugarLevel(0.25);
+                  }}
+                >
+                  25%
+                </div>
+                <div
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-sm outline-none outline data-[active]:outline-slate-300"
+                  data-active={sugarLevel === 0.5 ? true : undefined}
+                  onClick={() => {
+                    setSugarLevel(0.5);
+                  }}
+                >
+                  50%
+                </div>
+                <div
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-sm outline-none outline data-[active]:outline-slate-300"
+                  data-active={sugarLevel === 0.75 ? true : undefined}
+                  onClick={() => {
+                    setSugarLevel(0.75);
+                  }}
+                >
+                  75%
+                </div>
+              </div>
             </div>
             <div className="w-full">
-              <Label>Discount</Label>
-              <Input type="number" value={10} />
+              <Label className="text-xl font-bold">Discount</Label>
+              <Input type="number" value={10} className="mt-2" />
             </div>
           </div>
           <div className="my-2 w-full">
-            <Label>Attributes</Label>
-            <Textarea placeholder="Write out your note here" />
+            <Label className="text-xl font-bold">Attributes</Label>
+            <Textarea placeholder="Write out your note here" className="mt-2" />
           </div>
         </div>
 
