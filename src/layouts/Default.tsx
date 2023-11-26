@@ -1,15 +1,26 @@
+import { useAppDispatch } from "@/hooks/redux";
 import { Link } from "react-router-dom";
+import { logout } from "@/redux";
 
 interface DefaultProps {
   children: React.ReactNode;
 }
 
 function Default({ children }: DefaultProps) {
+  const dispatch = useAppDispatch();
+
   return (
     <div className="absolute inset-0 grid h-screen grid-rows-[auto,1fr]">
       <header className="flex bg-gray-700 p-3 shadow">
         <img src="assets/logo/logo_name@3x.png" alt="Logo" className="h-10" />
-        <button className="ml-auto mr-4 font-bold text-red-600">Logout</button>
+        <button
+          className="ml-auto mr-4 font-bold text-red-600"
+          onClick={() => {
+            dispatch(logout());
+          }}
+        >
+          Logout
+        </button>
       </header>
       <div className="grid h-full grid-cols-[auto,1fr]">
         <div className="h-full border-r-2 bg-slate-100 px-2">
