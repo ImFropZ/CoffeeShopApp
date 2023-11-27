@@ -28,11 +28,13 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
       <DialogTrigger>
         <div {...props} className={cn(props.className, "border")}>
           {!isImageLoaded ? (
-            <Skeleton className="aspect-square w-full" />
+            <Skeleton className="aspect-square w-full object-cover" />
           ) : null}
           <img
+            className="aspect-square w-full object-cover"
             src={imageSrc}
             alt={title}
+            hidden={!isImageLoaded}
             onLoad={() => {
               setImageLoaded(true);
             }}
