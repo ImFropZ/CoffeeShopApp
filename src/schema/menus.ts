@@ -5,6 +5,7 @@ export const menuItemSchema = z.object({
   id: z.string().uuid(),
   price: z.number().min(0),
   cupSize: cupSizeSchema,
+  picture: z.string().url(),
 });
 
 export const menuSchema = z.object({

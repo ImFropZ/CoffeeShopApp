@@ -4,10 +4,12 @@ import { useEffect } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { initMenus } from "@/redux";
+import { format } from "date-fns";
 
 function Menu() {
   const dispatch = useAppDispatch();
   const { data, isLoading } = useAppSelector((state) => state.menus);
+  const { menus } = useAppSelector((state) => state.orders);
 
   useEffect(() => {
     dispatch(initMenus());
@@ -31,22 +33,22 @@ function Menu() {
                   title={item.name}
                   className=""
                   key={item.name}
+                  data={item.data}
                 ></MenuItem>
               ))}
             </div>
           </div>
         </div>
       </div>
-      <div className="grid grid-rows-[auto,auto,1fr,auto] border-l px-4">
-        <div className="py-4 text-center text-xl font-bold">Cart (4)</div>
+      <div className="grid grid-rows-[auto,1fr,auto] border-l px-4">
         <div className="flex justify-between border-y py-2">
-          <div className="font-bold">Order Number</div>
-          <div>1st Nov 2023 - 14:00:00</div>
+          <div className="font-bold">Order</div>
+          <div>{format(new Date(), "qo MMM R - HH:mm:ss")}</div>
         </div>
         <div className="relative h-auto">
           <div className="absolute inset-0 overflow-auto pr-4">
-            {Array.from({ length: 24 }).map((_) => (
-              <CheckoutItem imageSrc="https://picsum.photos/50" title="bar" />
+            {menus.map((item) => (
+              <CheckoutItem {...item} />
             ))}
           </div>
         </div>

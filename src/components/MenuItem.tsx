@@ -12,16 +12,32 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
+import { useAppDispatch } from "@/hooks/redux";
+import { addOrder } from "@/redux";
 
 interface MenuItemProps extends HTMLAttributes<HTMLDivElement> {
   imageSrc: string;
   title: string;
+  data: {
+    id: string;
+    price: number;
+    cupSize: "SMALL" | "MEDIUM" | "LARGE";
+  }[];
 }
 
-function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
+function MenuItem({ imageSrc, title, data, ...props }: MenuItemProps) {
+  const dispatch = useAppDispatch();
+
   const [isImageLoaded, setImageLoaded] = useState<boolean>(false);
   const [cupSize, setCupSize] = useState<"SMALL" | "MEDIUM" | "LARGE">("SMALL");
   const [sugarLevel, setSugarLevel] = useState<number>(0.25);
+  const [iceLevel, setIceLevel] = useState<number>(0.25);
+
+  const resetState = () => {
+    setCupSize("SMALL");
+    setSugarLevel(0.25);
+    setIceLevel(0.25);
+  };
 
   return (
     <Dialog>
@@ -50,9 +66,6 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
               src={imageSrc}
               alt={title}
               className="aspect-square w-16 rounded-lg object-cover"
-              onLoad={() => {
-                setImageLoaded(true);
-              }}
             />
             <div className="text-xl">{title}</div>
           </div>
@@ -61,8 +74,11 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
               <Label className="text-xl font-bold">Size</Label>
               <div className="mt-2 flex gap-2">
                 <button
-                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline data-[active]:outline-slate-300"
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline disabled:opacity-30 data-[active]:outline-slate-300"
                   data-active={cupSize === "SMALL" ? true : undefined}
+                  disabled={
+                    data.find((item) => item.cupSize === "SMALL") === undefined
+                  }
                   onClick={() => {
                     setCupSize("SMALL");
                   }}
@@ -70,8 +86,11 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
                   S
                 </button>
                 <button
-                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline data-[active]:outline-slate-300"
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline disabled:opacity-30 data-[active]:outline-slate-300"
                   data-active={cupSize === "MEDIUM" ? true : undefined}
+                  disabled={
+                    data.find((item) => item.cupSize === "MEDIUM") === undefined
+                  }
                   onClick={() => {
                     setCupSize("MEDIUM");
                   }}
@@ -79,8 +98,11 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
                   M
                 </button>
                 <button
-                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline data-[active]:outline-slate-300"
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline disabled:opacity-30 data-[active]:outline-slate-300"
                   data-active={cupSize === "LARGE" ? true : undefined}
+                  disabled={
+                    data.find((item) => item.cupSize === "LARGE") === undefined
+                  }
                   onClick={() => {
                     setCupSize("LARGE");
                   }}
@@ -92,7 +114,7 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
             <div className="w-full">
               <Label className="text-xl font-bold">Sugar Levels</Label>
               <div className="mt-2 flex gap-2">
-                <div
+                <button
                   className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-sm outline-none outline data-[active]:outline-slate-300"
                   data-active={sugarLevel === 0.25 ? true : undefined}
                   onClick={() => {
@@ -100,8 +122,8 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
                   }}
                 >
                   25%
-                </div>
-                <div
+                </button>
+                <button
                   className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-sm outline-none outline data-[active]:outline-slate-300"
                   data-active={sugarLevel === 0.5 ? true : undefined}
                   onClick={() => {
@@ -109,8 +131,8 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
                   }}
                 >
                   50%
-                </div>
-                <div
+                </button>
+                <button
                   className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-sm outline-none outline data-[active]:outline-slate-300"
                   data-active={sugarLevel === 0.75 ? true : undefined}
                   onClick={() => {
@@ -118,14 +140,47 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
                   }}
                 >
                   75%
-                </div>
+                </button>
               </div>
             </div>
           </div>
-          <div className="my-2 mt-5 flex w-full justify-between gap-10"></div>
-          <div className="w-full">
-            <Label className="text-xl font-bold">Discount</Label>
-            <Input type="number" defaultValue={10} className="mt-2" />
+          <div className="my-2 mt-5 flex w-full justify-between gap-10">
+            <div className="w-full">
+              <Label className="text-xl font-bold">Ice %</Label>
+              <div className="mt-2 flex gap-2">
+                <button
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-sm outline-none outline data-[active]:outline-slate-300"
+                  data-active={iceLevel === 0.25 ? true : undefined}
+                  onClick={() => {
+                    setIceLevel(0.25);
+                  }}
+                >
+                  25%
+                </button>
+                <button
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-sm outline-none outline data-[active]:outline-slate-300"
+                  data-active={iceLevel === 0.5 ? true : undefined}
+                  onClick={() => {
+                    setIceLevel(0.5);
+                  }}
+                >
+                  50%
+                </button>
+                <button
+                  className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-sm outline-none outline data-[active]:outline-slate-300"
+                  data-active={iceLevel === 0.75 ? true : undefined}
+                  onClick={() => {
+                    setIceLevel(0.75);
+                  }}
+                >
+                  75%
+                </button>
+              </div>
+            </div>
+            <div className="w-full">
+              <Label className="text-xl font-bold">Discount</Label>
+              <Input type="number" defaultValue={10} className="mt-2" min={0} />
+            </div>
           </div>
           <div className="my-2 w-full">
             <Label className="text-xl font-bold">Attributes</Label>
@@ -136,10 +191,31 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
         <DialogFooter>
           <div className="flex gap-3">
             <DialogClose asChild>
-              <Button variant={"ghost"}>Back</Button>
+              <Button variant={"ghost"} onClick={resetState}>
+                Back
+              </Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button>Add</Button>
+              <Button
+                onClick={() => {
+                  dispatch(
+                    addOrder({
+                      cupSize: cupSize,
+                      ice: iceLevel,
+                      sugar: sugarLevel,
+                      quantity: 1,
+                      id: data.find((item) => item.cupSize === cupSize)?.id!,
+                      picture: imageSrc,
+                      name: title,
+                      price: data.find((item) => item.cupSize === cupSize)
+                        ?.price!,
+                    }),
+                  );
+                  resetState();
+                }}
+              >
+                Add
+              </Button>
             </DialogClose>
           </div>
         </DialogFooter>
