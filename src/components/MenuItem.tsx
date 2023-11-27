@@ -45,11 +45,11 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
       <DialogContent>
         <div className="flex flex-col items-center justify-center">
           <Label className="text-2xl font-bold underline">Menu</Label>
-          <div className="my-4 flex w-full gap-2 rounded">
+          <div className="my-4 flex w-full gap-2">
             <img
               src={imageSrc}
               alt={title}
-              className="aspect-square w-16"
+              className="aspect-square w-16 rounded-lg object-cover"
               onLoad={() => {
                 setImageLoaded(true);
               }}
@@ -60,7 +60,7 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
             <div className="w-full">
               <Label className="text-xl font-bold">Size</Label>
               <div className="mt-2 flex gap-2">
-                <div
+                <button
                   className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline data-[active]:outline-slate-300"
                   data-active={cupSize === "SMALL" ? true : undefined}
                   onClick={() => {
@@ -68,8 +68,8 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
                   }}
                 >
                   S
-                </div>
-                <div
+                </button>
+                <button
                   className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline data-[active]:outline-slate-300"
                   data-active={cupSize === "MEDIUM" ? true : undefined}
                   onClick={() => {
@@ -77,8 +77,8 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
                   }}
                 >
                   M
-                </div>
-                <div
+                </button>
+                <button
                   className="grid aspect-square w-10 cursor-pointer place-content-center rounded-full bg-slate-100 text-lg font-bold outline-none outline data-[active]:outline-slate-300"
                   data-active={cupSize === "LARGE" ? true : undefined}
                   onClick={() => {
@@ -86,15 +86,9 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
                   }}
                 >
                   L
-                </div>
+                </button>
               </div>
             </div>
-            <div className="w-full">
-              <Label className="text-xl font-bold">Quantity</Label>
-              <Input type="number" value={1} className="mt-2" />
-            </div>
-          </div>
-          <div className="my-2 mt-5 flex w-full justify-between gap-10">
             <div className="w-full">
               <Label className="text-xl font-bold">Sugar Levels</Label>
               <div className="mt-2 flex gap-2">
@@ -127,10 +121,11 @@ function MenuItem({ imageSrc, title, ...props }: MenuItemProps) {
                 </div>
               </div>
             </div>
-            <div className="w-full">
-              <Label className="text-xl font-bold">Discount</Label>
-              <Input type="number" value={10} className="mt-2" />
-            </div>
+          </div>
+          <div className="my-2 mt-5 flex w-full justify-between gap-10"></div>
+          <div className="w-full">
+            <Label className="text-xl font-bold">Discount</Label>
+            <Input type="number" defaultValue={10} className="mt-2" />
           </div>
           <div className="my-2 w-full">
             <Label className="text-xl font-bold">Attributes</Label>
