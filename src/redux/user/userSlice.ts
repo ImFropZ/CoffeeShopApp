@@ -1,11 +1,7 @@
-import {
-  getProfile,
-  login as authLogin,
-  logout as authLogout,
-} from "@/lib/axios/auth";
+import { getProfile, login as authLogin } from "@/lib/axios/auth";
 import { roleSchema } from "@/schema";
 import { loginSchema } from "@/schema/auth";
-import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as z from "zod";
 
 type User = {
@@ -36,26 +32,21 @@ export const initUser = createAsyncThunk("user/me", async () => {
 export const login = createAsyncThunk(
   "user/login",
   async (data: z.infer<typeof loginSchema>) => {
-    await authLogin(data);
+    const { accessToken, tokenType } = await authLogin(data);
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("tokenType", tokenType);
     initUser();
   },
 );
-
-export const logout = createAsyncThunk("user/logout", async () => {
-  await authLogout();
-});
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setCurrentUser: (state, action: PayloadAction<User>) => {
-      const { email, isLogin, picture, username } = action.payload;
-
-      state.username = username;
-      state.email = email;
-      state.picture = picture;
-      state.isLogin = isLogin;
+    logout: (state) => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("tokenType");
+      state.isLogin = false;
     },
   },
   extraReducers(builders) {
@@ -76,14 +67,8 @@ const userSlice = createSlice({
     builders.addCase(login.rejected, (state) => {
       state.isLogin = false;
     });
-    builders.addCase(logout.fulfilled, (state) => {
-      state.isLogin = false;
-    });
-    builders.addCase(logout.rejected, (state) => {
-      state.isLogin = false;
-    });
   },
 });
 
-export const { setCurrentUser } = userSlice.actions;
+export const { logout } = userSlice.actions;
 export default userSlice.reducer;

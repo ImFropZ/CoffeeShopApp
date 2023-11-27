@@ -12,6 +12,13 @@ export const loginSchema = z.object({
   password: z.string(),
 });
 
+export const loginResponseSchema = z.object({
+  accessToken: z.string(),
+  tokenType: z.enum(["Bearer"]),
+  expiresIn: z.number(),
+  role: roleSchema,
+});
+
 export const registerSchema = z.object({
   email: z.string().email().optional(),
   username: z.string(),

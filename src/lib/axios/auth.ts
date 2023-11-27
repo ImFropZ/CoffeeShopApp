@@ -1,6 +1,6 @@
 import axios from "@/config/axios";
-import { messageResponseSchema } from "@/schema";
 import {
+  loginResponseSchema,
   loginSchema,
   profileSchema,
   registerResponseSchema,
@@ -11,35 +11,17 @@ import * as z from "zod";
 export async function getProfile() {
   return axios
     .get<z.infer<typeof profileSchema>>("/auth/me")
-    .then((res) => res.data)
-    .catch((err) => {
-      throw err;
-    });
+    .then((res) => res.data);
 }
 
 export async function login(data: z.infer<typeof loginSchema>) {
   return axios
-    .post<z.infer<typeof messageResponseSchema>>("/auth/login", data)
-    .then((res) => res.data)
-    .catch((err) => {
-      throw err;
-    });
-}
-
-export async function logout() {
-  return axios
-    .post<z.infer<typeof messageResponseSchema>>("/auth/logout")
-    .then((res) => res.data)
-    .catch((err) => {
-      throw err;
-    });
+    .post<z.infer<typeof loginResponseSchema>>("/auth/login", data)
+    .then((res) => res.data);
 }
 
 export async function register(data: z.infer<typeof registerSchema>) {
   return axios
     .post<z.infer<typeof registerResponseSchema>>("/auth/register", data)
-    .then((res) => res.data)
-    .catch((err) => {
-      throw err;
-    });
+    .then((res) => res.data);
 }

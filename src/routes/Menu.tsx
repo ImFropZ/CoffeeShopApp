@@ -1,8 +1,20 @@
 import { CheckoutItem, MenuItem } from "@/components";
 import { Input } from "@/components/ui/input";
+import { useEffect } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { initMenus } from "@/redux";
 
 function Menu() {
+  const dispatch = useAppDispatch();
+  const { data, isLoading } = useAppSelector((state) => state.menus);
+
+  useEffect(() => {
+    dispatch(initMenus());
+  }, []);
+
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <div className="grid h-full grid-cols-3">
       <div className="col-span-2 grid h-full grid-rows-[auto,1fr] px-2 pb-2">
@@ -13,11 +25,12 @@ function Menu() {
         <div className="relative mt-2">
           <div className="absolute inset-0 overflow-y-auto">
             <div className="grid grid-cols-[repeat(auto-fill,200px)] grid-rows-[repeat(auto-fill,auto)] justify-center gap-2">
-              {Array.from({ length: 24 }).map((_) => (
+              {data.map((item) => (
                 <MenuItem
-                  imageSrc="https://picsum.photos/200"
-                  title="Foo"
+                  imageSrc={item.picture}
+                  title={item.name}
                   className=""
+                  key={item.name}
                 ></MenuItem>
               ))}
             </div>
