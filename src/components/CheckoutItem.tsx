@@ -1,11 +1,10 @@
-import { Input } from "./ui/input";
 import { useState } from "react";
-import { LuX } from "react-icons/lu";
+import { LuChevronLeft, LuChevronRight, LuX } from "react-icons/lu";
 import { Skeleton } from "./ui/skeleton";
 import { z } from "zod";
 import { menuItemOrderSchema } from "@/schema/order";
 import { useAppDispatch } from "@/hooks/redux";
-import { removeOrder } from "@/redux";
+import { decreaseQtyToOrder, increaseQtyToOrder, removeOrder } from "@/redux";
 
 interface CheckoutItemProps extends z.infer<typeof menuItemOrderSchema> {
   picture: string;
@@ -21,6 +20,7 @@ function CheckoutItem({
   cupSize,
   ice,
   sugar,
+  quantity,
 }: CheckoutItemProps) {
   const dispatch = useAppDispatch();
   const [isImageLoaded, setImageLoaded] = useState<boolean>(false);
@@ -50,13 +50,39 @@ function CheckoutItem({
       </div>
       <div className="flex items-center justify-between gap-2">
         <span className="text-lg">Quantity</span>
-        <Input type="number" className="w-32" defaultValue={1} min={0} />
+        <div className="flex items-center gap-2">
+          <button
+            className="rounded-full bg-slate-200 p-2"
+            disabled={quantity < 2}
+            onClick={() => {
+              dispatch(decreaseQtyToOrder({ id, cupSize, ice, sugar }));
+            }}
+          >
+            <LuChevronLeft />
+          </button>
+          <span>{quantity}</span>
+          <button
+            className="rounded-full bg-slate-200 p-2"
+            onClick={() => {
+              dispatch(increaseQtyToOrder({ id, cupSize, ice, sugar }));
+            }}
+          >
+            <LuChevronRight />
+          </button>
+        </div>
       </div>
       <div className="absolute right-0 top-0 h-6 w-6 rounded-full hover:bg-slate-200">
         <button
           className="p-1"
           onClick={() => {
-            dispatch(removeOrder(id));
+            dispatch(
+              removeOrder({
+                id,
+                cupSize,
+                ice,
+                sugar,
+              }),
+            );
           }}
         >
           <LuX className="text-red-600" />

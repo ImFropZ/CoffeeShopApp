@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { initMenus } from "@/redux";
+import { initMenus, loadFromLocalStorage } from "@/redux";
 import { format } from "date-fns";
 
 function Menu() {
@@ -13,6 +13,7 @@ function Menu() {
 
   useEffect(() => {
     dispatch(initMenus());
+    dispatch(loadFromLocalStorage());
   }, []);
 
   if (isLoading) return <div>Loading...</div>;
@@ -55,13 +56,27 @@ function Menu() {
         <div className="flex items-center justify-between border-t py-4">
           <div>
             <div>
-              Total : <span>$10</span>
+              Total :{" "}
+              <span>
+                $
+                {menus.reduce(
+                  (total, menu) => total + menu.price * menu.quantity,
+                  0,
+                )}
+              </span>
             </div>
             <div>
-              Discount(0%) : <span>10%</span>
+              Discount(0%) : <span>0%</span>
             </div>
             <div>
-              Checkout : <span>$9</span>
+              Checkout :{" "}
+              <span>
+                $
+                {menus.reduce(
+                  (total, menu) => total + menu.price * menu.quantity,
+                  0,
+                )}
+              </span>
             </div>
           </div>
           <div className="flex gap-2">
