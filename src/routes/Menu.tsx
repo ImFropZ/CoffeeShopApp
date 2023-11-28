@@ -1,6 +1,6 @@
 import { CheckoutItem, MenuItem } from "@/components";
 import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { initMenus, loadFromLocalStorage } from "@/redux";
@@ -10,6 +10,7 @@ function Menu() {
   const dispatch = useAppDispatch();
   const { data, isLoading } = useAppSelector((state) => state.menus);
   const { menus } = useAppSelector((state) => state.orders);
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     dispatch(initMenus());
@@ -22,21 +23,32 @@ function Menu() {
     <div className="grid h-full grid-cols-3">
       <div className="col-span-2 grid h-full grid-rows-[auto,1fr] px-2 pb-2">
         <div className="relative">
-          <Input placeholder="Search..." className="mt-2 text-lg" />
+          <Input
+            placeholder="Search..."
+            className="mt-2 text-lg"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.currentTarget.value)}
+          />
           <FaMagnifyingGlass className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 opacity-75" />
         </div>
         <div className="relative mt-2">
           <div className="absolute inset-0 overflow-y-auto">
             <div className="grid grid-cols-[repeat(auto-fill,200px)] grid-rows-[repeat(auto-fill,auto)] justify-center gap-2">
-              {data.map((item) => (
-                <MenuItem
-                  imageSrc={item.picture}
-                  title={item.name}
-                  className=""
-                  key={item.name}
-                  data={item.data}
-                ></MenuItem>
-              ))}
+              {data.map(
+                (item) =>
+                  (item.name
+                    .toLowerCase()
+                    .includes(searchInput.toLowerCase()) ||
+                    searchInput === "") && (
+                    <MenuItem
+                      imageSrc={item.picture}
+                      title={item.name}
+                      className=""
+                      key={item.name}
+                      data={item.data}
+                    ></MenuItem>
+                  ),
+              )}
             </div>
           </div>
         </div>
