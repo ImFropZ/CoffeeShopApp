@@ -29,6 +29,8 @@ import {
 } from "../ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { Label } from "../ui/label";
+import { useAppDispatch } from "@/hooks/redux";
+import { addStock } from "@/redux/stock";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -39,6 +41,8 @@ export function StockDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const dispatch = useAppDispatch();
+  const [newStock, setNewStock] = useState("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
@@ -79,11 +83,24 @@ export function StockDataTable<TData, TValue>({
             </DialogHeader>
             <div className="relative">
               <Label>Name</Label>
-              <Input />
+              <Input
+                value={newStock}
+                onChange={(e) => {
+                  setNewStock(e.currentTarget.value);
+                }}
+              />
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button type="submit">Save changes</Button>
+                <Button
+                  type="submit"
+                  onClick={() => {
+                    dispatch(addStock(newStock));
+                    setNewStock("");
+                  }}
+                >
+                  Add
+                </Button>
               </DialogClose>
             </DialogFooter>
           </DialogContent>

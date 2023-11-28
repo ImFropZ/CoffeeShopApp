@@ -57,10 +57,10 @@ export function StockItemDataTable<TData, TValue>({
         <Input
           placeholder="Search..."
           value={
-            (table.getColumn("expireDate")?.getFilterValue() as string) ?? ""
+            (table.getColumn("expiresDate")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("expireDate")?.setFilterValue(event.target.value)
+            table.getColumn("expiresDate")?.setFilterValue(event.target.value)
           }
           className="m-2 w-1/3 text-lg"
         />

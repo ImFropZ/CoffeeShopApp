@@ -1,16 +1,19 @@
 import { StockDataTable, stockColumns } from "@/components/stock";
+import { useAppSelector, useAppDispatch } from "@/hooks/redux";
+import { initStocks } from "@/redux/stock";
+import { useEffect } from "react";
 
 function Stock() {
-  const data = Array.from({ length: 100 }).map((_, index) => {
-    return {
-      id: index + "",
-      name: `Stock ${index}`,
-    };
-  });
+  const dispatch = useAppDispatch();
+  const menus = useAppSelector((state) => state.stocks.data);
+
+  useEffect(() => {
+    dispatch(initStocks());
+  }, []);
 
   return (
     <div className="relative h-full">
-      <StockDataTable columns={stockColumns} data={data} />
+      <StockDataTable columns={stockColumns} data={menus} />
     </div>
   );
 }

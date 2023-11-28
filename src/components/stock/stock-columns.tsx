@@ -22,6 +22,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import { useAppSelector } from "@/hooks/redux";
+import { format } from "date-fns";
 
 export type Stock = {
   id: string;
@@ -32,6 +34,13 @@ export const stockColumns: ColumnDef<Stock>[] = [
   {
     accessorKey: "id",
     header: "ID",
+    cell: ({ cell }) => {
+      return (
+        <div className="w-32 overflow-clip whitespace-nowrap">
+          {cell.row.original.id}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "name",
@@ -40,16 +49,14 @@ export const stockColumns: ColumnDef<Stock>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: () => {
-      // Mock Data
-      const data: StockItem[] = [];
-      Array.from({ length: 100 }).forEach((_, index) => {
-        data.push({
-          id: index + "",
-          expireDate: "2021-10-10",
-          quantity: 10,
-          price: 100,
-        });
+    cell: ({ cell }) => {
+      const stockItems = useAppSelector((state) => {
+        const stocks = state.stocks.data;
+
+        const id = cell.row.original.id;
+        const stock = stocks.find((stock) => stock.id === id);
+
+        return stock?.items || [];
       });
 
       return (
@@ -75,7 +82,10 @@ export const stockColumns: ColumnDef<Stock>[] = [
                 </DialogDescription>
               </DialogHeader>
               <div className="relative h-72">
-                <StockItemDataTable columns={stockItemColumns} data={data} />
+                <StockItemDataTable
+                  columns={stockItemColumns}
+                  data={stockItems}
+                />
               </div>
               <DialogFooter>
                 <DialogClose asChild>
@@ -105,7 +115,7 @@ export const stockColumns: ColumnDef<Stock>[] = [
 
 export type StockItem = {
   id: string;
-  expireDate: string;
+  expiresDate: string;
   quantity: number;
   price: number;
 };
@@ -114,11 +124,25 @@ export const stockItemColumns: ColumnDef<StockItem>[] = [
   {
     accessorKey: "id",
     header: "ID",
+    cell: ({ cell }) => {
+      return (
+        <div className="w-32 overflow-clip whitespace-nowrap">
+          {cell.row.original.id}
+        </div>
+      );
+    },
   },
   {
-    id: "expireDate",
-    accessorKey: "expireDate",
-    header: "Expire Date",
+    id: "expiresDate",
+    accessorKey: "expiresDate",
+    header: "Expires Date",
+    cell: ({ cell }) => {
+      return (
+        <div className="w-32 overflow-clip whitespace-nowrap">
+          {format(new Date(cell.row.original.expiresDate), "d MMM yyyy")}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "quantity",
