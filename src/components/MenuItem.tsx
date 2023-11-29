@@ -29,12 +29,14 @@ function MenuItem({ imageSrc, title, data, ...props }: MenuItemProps) {
   const dispatch = useAppDispatch();
 
   const [isImageLoaded, setImageLoaded] = useState<boolean>(false);
-  const [cupSize, setCupSize] = useState<"SMALL" | "MEDIUM" | "LARGE">("SMALL");
+  const [cupSize, setCupSize] = useState<"SMALL" | "MEDIUM" | "LARGE">(
+    data[0].cupSize,
+  );
   const [sugarLevel, setSugarLevel] = useState<number>(0.25);
   const [iceLevel, setIceLevel] = useState<number>(0.25);
 
   const resetState = () => {
-    setCupSize("SMALL");
+    setCupSize(data[0].cupSize);
     setSugarLevel(0.25);
     setIceLevel(0.25);
   };
