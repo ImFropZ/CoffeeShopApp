@@ -29,8 +29,9 @@ import {
 } from "../ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { Label } from "../ui/label";
-import { useAppDispatch } from "@/hooks/redux";
-import { addStock } from "@/redux/stock";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { addStock, resetStockUpdates, updateStockItems } from "@/redux/stock";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,6 +46,8 @@ export function StockDataTable<TData, TValue>({
   const [newStock, setNewStock] = useState("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
+  const stockUpdates = useAppSelector((state) => state.stocks.stockUpdates);
+
   const table = useReactTable({
     data,
     columns,
@@ -58,18 +61,34 @@ export function StockDataTable<TData, TValue>({
 
   return (
     <div className="absolute inset-0 grid grid-rows-[auto,1fr] rounded-md border">
-      <div className="flex items-center">
+      <div className="flex items-center justify-end">
         <Input
           placeholder="Search..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="m-2 w-1/3 text-lg"
+          className="m-2 mr-auto w-1/3 text-lg"
         />
+        <Button
+          className={cn("mr-2", stockUpdates.length === 0 ? "hidden" : "")}
+          onClick={() => {
+            dispatch(updateStockItems(stockUpdates));
+          }}
+        >
+          Save Changes
+        </Button>
+        <Button
+          className={cn("mr-2", stockUpdates.length === 0 ? "hidden" : "")}
+          onClick={() => {
+            dispatch(resetStockUpdates());
+          }}
+        >
+          Reset to Defaults
+        </Button>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="ml-auto mr-2" variant="outline">
+            <Button className="mr-2" variant="outline">
               Add
             </Button>
           </DialogTrigger>
@@ -90,6 +109,7 @@ export function StockDataTable<TData, TValue>({
                 }}
               />
             </div>
+
             <DialogFooter>
               <DialogClose asChild>
                 <Button

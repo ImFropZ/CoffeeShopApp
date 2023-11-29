@@ -2,10 +2,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -24,7 +22,7 @@ import {
 } from "../ui/alert-dialog";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { format } from "date-fns";
-import { removeStockItem } from "@/redux/stock";
+import { removeStockItem, updateStockItem } from "@/redux/stock";
 
 export type Stock = {
   id: string;
@@ -37,7 +35,7 @@ export const stockColumns: ColumnDef<Stock>[] = [
     header: "ID",
     cell: ({ cell }) => {
       return (
-        <div className="w-32 overflow-clip whitespace-nowrap">
+        <div className="w-32 overflow-auto pb-4 whitespace-nowrap">
           {cell.row.original.id}
         </div>
       );
@@ -81,11 +79,6 @@ export const stockColumns: ColumnDef<Stock>[] = [
                 stockId={cell.row.original.id}
               />
             </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button type="submit">Save changes</Button>
-              </DialogClose>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       );
@@ -107,7 +100,7 @@ export const stockItemColumns: ColumnDef<StockItem>[] = [
     header: "ID",
     cell: ({ cell }) => {
       return (
-        <div className="w-32 overflow-clip whitespace-nowrap">
+        <div className="w-32 overflow-auto whitespace-nowrap pb-4">
           {cell.row.original.id}
         </div>
       );
@@ -119,7 +112,7 @@ export const stockItemColumns: ColumnDef<StockItem>[] = [
     header: "Expires Date",
     cell: ({ cell }) => {
       return (
-        <div className="w-32 overflow-clip whitespace-nowrap">
+        <div className="w-32 whitespace-nowrap">
           {format(new Date(cell.row.original.expiresDate), "d MMM yyyy")}
         </div>
       );
@@ -128,6 +121,22 @@ export const stockItemColumns: ColumnDef<StockItem>[] = [
   {
     accessorKey: "quantity",
     header: "Quantity",
+    cell: ({ cell }) => {
+      const { id } = cell.row.original;
+      const stockUpdates = useAppSelector((state) => state.stocks.stockUpdates);
+
+      const updateStockItemQty = stockUpdates.find((stock) => stock.id === id)
+        ?.quantity;
+
+      const quantity =
+        updateStockItemQty === undefined
+          ? cell.row.original.quantity
+          : updateStockItemQty;
+
+      return (
+        <div className="w-16 overflow-clip whitespace-nowrap">{quantity}</div>
+      );
+    },
   },
   {
     accessorKey: "price",
@@ -137,13 +146,46 @@ export const stockItemColumns: ColumnDef<StockItem>[] = [
     header: "Actions",
     cell: ({ cell }) => {
       const dispatch = useAppDispatch();
+      const stockUpdates = useAppSelector((state) => state.stocks.stockUpdates);
       const { id, stockId } = cell.row.original;
+
+      const updateStockItemQty = stockUpdates.find((stock) => stock.id === id)
+        ?.quantity;
+
+      const quantity =
+        updateStockItemQty === undefined
+          ? cell.row.original.quantity
+          : updateStockItemQty;
 
       return (
         <AlertDialog>
           <div className="flex gap-2">
-            <Button variant="outline">-</Button>
-            <Button variant="outline">+</Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                dispatch(
+                  updateStockItem({
+                    id,
+                    quantity: quantity - 1,
+                  }),
+                );
+              }}
+            >
+              -
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                dispatch(
+                  updateStockItem({
+                    id,
+                    quantity: quantity + 1,
+                  }),
+                );
+              }}
+            >
+              +
+            </Button>
             <AlertDialogTrigger asChild>
               <Button
                 variant="outline"

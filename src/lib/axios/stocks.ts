@@ -1,4 +1,5 @@
 import axios from "@/config/axios";
+import { StockUpdate } from "@/redux/stock";
 import { stockItemSchema, stockSchema } from "@/schema/stock";
 import { z } from "zod";
 
@@ -10,12 +11,11 @@ export const getStocks = async () => {
 };
 
 export const createStock = async (name: string) => {
-  const res = await axios.post<{ data: Omit<z.infer<typeof stockSchema>,"items"> }>(
-    "/stocks",
-    {
-      name,
-    },
-  );
+  const res = await axios.post<{
+    data: Omit<z.infer<typeof stockSchema>, "items">;
+  }>("/stocks", {
+    name,
+  });
   return res.data.data;
 };
 
@@ -46,6 +46,14 @@ export const createStockItem = async (
 export const removeStockItem = async (stockId: string, stockItemId: string) => {
   const res = await axios.delete<{ data: z.infer<typeof stockItemSchema> }>(
     "/stocks/" + stockId + "/items/" + stockItemId,
+  );
+  return res.data.data;
+};
+
+export const updateStockItems = async (data: StockUpdate[]) => {
+  const res = await axios.put<{ data: z.infer<typeof stockItemSchema>[] }>(
+    "/stocks/items",
+    [...data],
   );
   return res.data.data;
 };

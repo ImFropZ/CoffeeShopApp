@@ -1,6 +1,5 @@
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -161,6 +160,7 @@ export function StockItemDataTable<TData, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                className=""
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
