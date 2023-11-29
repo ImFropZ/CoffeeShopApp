@@ -5,6 +5,17 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { initMenus, loadFromLocalStorage } from "@/redux";
 import { format } from "date-fns";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 function Menu() {
   const dispatch = useAppDispatch();
@@ -92,12 +103,66 @@ function Menu() {
             </div>
           </div>
           <div className="flex gap-2">
-            <button className="rounded-lg px-3 py-3 font-bold shadow outline outline-[2px] outline-slate-400 hover:bg-blue-400 hover:text-white">
-              Discount
-            </button>
-            <button className="rounded-lg px-6 py-3 font-bold shadow outline outline-[2px] outline-slate-400 hover:bg-green-400 hover:text-white">
-              Checkout
-            </button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="rounded-lg px-6 py-3 font-bold shadow outline outline-[2px] outline-slate-400 hover:bg-green-400 hover:text-white">
+                  Checkout
+                </button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>Checkout</DialogHeader>
+                <DialogDescription>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex justify-between">
+                      <div>Total</div>
+                      <div>
+                        $
+                        {menus.reduce(
+                          (total, menu) => total + menu.price * menu.quantity,
+                          0,
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div>Discount</div>
+                      <div>0%</div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div>Checkout</div>
+                      <div>
+                        $
+                        {menus.reduce(
+                          (total, menu) => total + menu.price * menu.quantity,
+                          0,
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </DialogDescription>
+                <DialogFooter>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button>Add discount</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <Label>Discount %</Label>
+                      <Input type="number" defaultValue={0}></Input>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button variant={"ghost"}>Cancel</Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                          <Button>Confirm</Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  <DialogClose asChild>
+                    <Button>Make transaction</Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>
