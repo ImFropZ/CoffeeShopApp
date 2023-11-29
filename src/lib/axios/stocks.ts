@@ -33,12 +33,19 @@ export const createStockItem = async (
   price: number,
 ) => {
   const res = await axios.post<{ data: z.infer<typeof stockItemSchema> }>(
-    "/stocks" + stockId + "/items",
+    "/stocks/" + stockId + "/items",
     {
       expiresDate,
       quantity,
       price,
     },
+  );
+  return res.data.data;
+};
+
+export const removeStockItem = async (stockId: string, stockItemId: string) => {
+  const res = await axios.delete<{ data: z.infer<typeof stockItemSchema> }>(
+    "/stocks/" + stockId + "/items/" + stockItemId,
   );
   return res.data.data;
 };

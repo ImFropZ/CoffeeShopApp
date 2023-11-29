@@ -1,4 +1,9 @@
-import { createStock, getStocks } from "@/lib/axios/stocks";
+import {
+  createStock,
+  createStockItem,
+  getStocks,
+  removeStockItem as removeStockItemRequest,
+} from "@/lib/axios/stocks";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 type Stock = {
@@ -9,6 +14,7 @@ type Stock = {
     expiresDate: string;
     quantity: number;
     price: number;
+    stockId: string;
   }[];
 };
 
@@ -27,6 +33,36 @@ export const addStock = createAsyncThunk(
   },
 );
 
+export const addStockItem = createAsyncThunk(
+  "stock/addStockItem",
+  async ({
+    stockId,
+    expiresDate,
+    quantity,
+    price,
+  }: {
+    stockId: string;
+    expiresDate: string;
+    quantity: number;
+    price: number;
+  }) => {
+    return await createStockItem(stockId, expiresDate, quantity, price);
+  },
+);
+
+export const removeStockItem = createAsyncThunk(
+  "stock/removeStockItem",
+  async ({
+    stockId,
+    stockItemId,
+  }: {
+    stockId: string;
+    stockItemId: string;
+  }) => {
+    return await removeStockItemRequest(stockId, stockItemId);
+  },
+);
+
 const stockSlice = createSlice({
   name: "stock",
   initialState,
@@ -37,6 +73,24 @@ const stockSlice = createSlice({
     });
     builder.addCase(addStock.fulfilled, (state, action) => {
       state.data.push(action.payload);
+    });
+    builder.addCase(addStockItem.fulfilled, (state, action) => {
+      const stock = state.data.find(
+        (stock) => stock.id === action.payload.stockId,
+      );
+      if (stock) {
+        stock.items.push(action.payload);
+      }
+    });
+    builder.addCase(removeStockItem.fulfilled, (state, action) => {
+      const stock = state.data.find(
+        (stock) => stock.id === action.payload.stockId,
+      );
+      if (stock) {
+        stock.items = stock.items.filter(
+          (item) => item.id !== action.payload.id,
+        );
+      }
     });
   },
 });

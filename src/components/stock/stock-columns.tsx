@@ -22,8 +22,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { useAppSelector } from "@/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { format } from "date-fns";
+import { removeStockItem } from "@/redux/stock";
 
 export type Stock = {
   id: string;
@@ -85,6 +86,7 @@ export const stockColumns: ColumnDef<Stock>[] = [
                 <StockItemDataTable
                   columns={stockItemColumns}
                   data={stockItems}
+                  stockId={cell.row.original.id}
                 />
               </div>
               <DialogFooter>
@@ -118,6 +120,7 @@ export type StockItem = {
   expiresDate: string;
   quantity: number;
   price: number;
+  stockId: string;
 };
 
 export const stockItemColumns: ColumnDef<StockItem>[] = [
@@ -154,7 +157,10 @@ export const stockItemColumns: ColumnDef<StockItem>[] = [
   },
   {
     header: "Actions",
-    cell: () => {
+    cell: ({ cell }) => {
+      const dispatch = useAppDispatch();
+      const { id, stockId } = cell.row.original;
+
       return (
         <AlertDialog>
           <div className="flex gap-2">
@@ -179,7 +185,13 @@ export const stockItemColumns: ColumnDef<StockItem>[] = [
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction>Continue</AlertDialogAction>
+              <AlertDialogAction
+                onClick={() => {
+                  dispatch(removeStockItem({ stockId, stockItemId: id }));
+                }}
+              >
+                Continue
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

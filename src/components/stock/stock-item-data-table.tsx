@@ -28,7 +28,9 @@ import {
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { useState } from "react";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
+import { useAppDispatch } from "@/hooks/redux";
+import { addStockItem } from "@/redux/stock";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -38,7 +40,14 @@ interface DataTableProps<TData, TValue> {
 export function StockItemDataTable<TData, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+  stockId,
+}: DataTableProps<TData, TValue> & { stockId: string }) {
+  const dispatch = useAppDispatch();
+  const [newStockItem, setNewStockItem] = useState({
+    expireDate: new Date(),
+    quantity: 1,
+    price: 1,
+  });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
@@ -82,16 +91,61 @@ export function StockItemDataTable<TData, TValue>({
               <Label>Expire Date</Label>
               <Input
                 type="date"
-                defaultValue={format(new Date(), "yyyy-MM-dd")}
+                value={format(newStockItem.expireDate, "yyyy-MM-dd")}
+                onChange={(e) => {
+                  setNewStockItem({
+                    ...newStockItem,
+                    expireDate: new Date(e.currentTarget.value),
+                  });
+                }}
               />
               <Label>Quantity</Label>
-              <Input type="number" defaultValue={1} />
+              <Input
+                type="number"
+                value={newStockItem.quantity}
+                onChange={(e) => {
+                  setNewStockItem({
+                    ...newStockItem,
+                    quantity: parseInt(e.currentTarget.value),
+                  });
+                }}
+              />
               <Label>Price</Label>
-              <Input type="number" defaultValue={1} />
+              <Input
+                type="number"
+                value={newStockItem.price}
+                onChange={(e) => {
+                  setNewStockItem({
+                    ...newStockItem,
+                    price: parseFloat(e.currentTarget.value),
+                  });
+                }}
+              />
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button type="submit">Save changes</Button>
+                <Button
+                  type="submit"
+                  onClick={() => {
+                    dispatch(
+                      addStockItem({
+                        ...newStockItem,
+                        stockId,
+                        expiresDate: format(
+                          newStockItem.expireDate,
+                          "yyyy-MM-dd",
+                        ),
+                      }),
+                    );
+                    setNewStockItem({
+                      expireDate: new Date(),
+                      quantity: 1,
+                      price: 1,
+                    });
+                  }}
+                >
+                  Add
+                </Button>
               </DialogClose>
             </DialogFooter>
           </DialogContent>
