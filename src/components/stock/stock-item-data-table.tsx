@@ -28,7 +28,7 @@ import {
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { useState } from "react";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { useAppDispatch } from "@/hooks/redux";
 import { addStockItem } from "@/redux/stock";
 
@@ -48,31 +48,16 @@ export function StockItemDataTable<TData, TValue>({
     quantity: 1,
     price: 1,
   });
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      columnFilters,
-    },
   });
 
   return (
     <div className="absolute inset-0 grid grid-rows-[auto,1fr] rounded-md border">
-      <div className="flex items-center">
-        <Input
-          placeholder="Search..."
-          value={
-            (table.getColumn("expiresDate")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("expiresDate")?.setFilterValue(event.target.value)
-          }
-          className="m-2 w-1/3 text-lg"
-        />
+      <div className="flex items-center py-2">
         <Dialog>
           <DialogTrigger asChild>
             <Button className="ml-auto mr-2" variant="outline">
