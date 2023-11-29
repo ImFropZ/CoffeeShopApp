@@ -12,9 +12,6 @@
   },
   "tauri": {
     "allowlist": {
-      "notification": {
-        "all": true
-      },
       "all": false,
       "shell": {
         "all": false,
