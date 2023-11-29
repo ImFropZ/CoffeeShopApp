@@ -72,7 +72,7 @@ const stockSlice = createSlice({
       state.data = action.payload;
     });
     builder.addCase(addStock.fulfilled, (state, action) => {
-      state.data.push(action.payload);
+      state.data.push({ ...action.payload, items: [] });
     });
     builder.addCase(addStockItem.fulfilled, (state, action) => {
       const stock = state.data.find(

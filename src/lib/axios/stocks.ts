@@ -10,7 +10,7 @@ export const getStocks = async () => {
 };
 
 export const createStock = async (name: string) => {
-  const res = await axios.post<{ data: z.infer<typeof stockSchema> }>(
+  const res = await axios.post<{ data: Omit<z.infer<typeof stockSchema>,"items"> }>(
     "/stocks",
     {
       name,
