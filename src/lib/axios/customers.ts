@@ -26,7 +26,7 @@ export type CreateCustomer = {
   address?: string;
 };
 
-type UpdateCustomer = {
+export type UpdateCustomer = {
   name?: string;
   phone?: string;
   address?: string;

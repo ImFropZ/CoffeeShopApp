@@ -1,6 +1,7 @@
 import {
   CreateCustomer,
   Customer,
+  UpdateCustomer,
   getCustomers,
   createCustomer as cCustomer,
   updateCustomer as uCustomer,
@@ -24,7 +25,7 @@ export const createCustomer = createAsyncThunk(
 
 export const updateCustomer = createAsyncThunk(
   "customer/update",
-  async ({ id, customer }: { id: string; customer: Customer }) => {
+  async ({ id, customer }: { id: string; customer: UpdateCustomer }) => {
     return await uCustomer(id, customer);
   },
 );

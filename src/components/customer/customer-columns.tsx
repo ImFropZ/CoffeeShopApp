@@ -17,14 +17,27 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Customer } from "@/lib/axios/customers";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Textarea } from "../ui/textarea";
+import { useAppDispatch } from "@/hooks/redux";
+import { updateCustomer } from "@/redux";
+import { useRef, useState } from "react";
 
 export const customerColumns: ColumnDef<Customer>[] = [
   {
@@ -41,13 +54,58 @@ export const customerColumns: ColumnDef<Customer>[] = [
   },
   {
     accessorKey: "address",
-    header: "Address"
+    header: "Address",
   },
   {
     header: "Actions",
-    cell: () => {
+    cell: ({ cell }) => {
+      const { name, phone, address } = cell.row.original;
+      const dispatch = useAppDispatch();
+      const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
+
+      const formSchema = z.object({
+        name: z.string().min(3).max(100),
+        phone: z.string().min(3).max(20),
+        address: z.string().min(3).max(100),
+      });
+
+      const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+          name: name,
+          phone: phone,
+          address: address,
+        },
+      });
+
+      const onSubmit = () => {
+        const { name, phone, address } = form.getValues();
+        
+        dispatch(
+          updateCustomer({
+            id: cell.row.original.id,
+            customer: {
+              ...(name ? { name } : {}),
+              ...(phone ? { phone } : {}),
+              ...(address ? { address } : {}),
+            },
+          }),
+        );
+
+        if (!name || !phone || !address) {
+          return;
+        }
+
+        setDialogOpen(false);
+      };
+
       return (
-        <Dialog>
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={() => {
+            setDialogOpen((prev) => !prev);
+          }}
+        >
           <AlertDialog>
             <div className="flex gap-4">
               <DialogTrigger asChild>
@@ -73,17 +131,54 @@ export const customerColumns: ColumnDef<Customer>[] = [
                 <DialogDescription>
                   Update your customer information.
                 </DialogDescription>
-                <div className="relative">
-                  <Label>Name</Label>
-                  <Input defaultValue={"Lim Tangmeng"} />
-                  <Label>Phone Number</Label>
-                  <Input type="text" defaultValue="+855" />
-                </div>
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button type="submit">Save changes</Button>
-                  </DialogClose>
-                </DialogFooter>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-bold">Name</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-bold">
+                            Phone Number
+                          </FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-bold">Address</FormLabel>
+                          <FormControl>
+                            <Textarea {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="mt-2 flex justify-end">
+                      <Button type="submit">Save changes</Button>
+                    </div>
+                  </form>
+                </Form>
               </DialogHeader>
             </DialogContent>
             <AlertDialogContent>

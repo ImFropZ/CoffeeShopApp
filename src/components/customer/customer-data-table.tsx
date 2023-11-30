@@ -6,7 +6,6 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -36,6 +35,8 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Textarea } from "../ui/textarea";
+import { useAppDispatch } from "@/hooks/redux";
+import { createCustomer } from "@/redux";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -58,6 +59,7 @@ export function CustomerDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const dispatch = useAppDispatch();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -78,8 +80,17 @@ export function CustomerDataTable<TData, TValue>({
     },
   });
 
+  const resetForm = () => {
+    form.reset({
+      name: "",
+      phone: "",
+      address: "",
+    });
+  };
+
   const onSubmit = (value: z.infer<typeof formSchema>) => {
-    console.log(value);
+    dispatch(createCustomer(value));
+    resetForm();
   };
 
   return (
