@@ -24,12 +24,7 @@ import {
 } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-
-export type Customer = {
-  id: string;
-  name: string;
-  phoneNumber: string;
-};
+import { Customer } from "@/lib/axios/customers";
 
 export const customerColumns: ColumnDef<Customer>[] = [
   {
@@ -41,8 +36,12 @@ export const customerColumns: ColumnDef<Customer>[] = [
     header: "Name",
   },
   {
-    accessorKey: "phoneNumber",
+    accessorKey: "phone",
     header: "Phone Number",
+  },
+  {
+    accessorKey: "address",
+    header: "Address"
   },
   {
     header: "Actions",

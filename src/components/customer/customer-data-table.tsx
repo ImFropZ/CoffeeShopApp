@@ -18,16 +18,54 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "../ui/dialog";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Textarea } from "../ui/textarea";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
+const formSchema = z.object({
+  name: z.string().min(3).max(100),
+  phone: z.preprocess(
+    (arg) => (arg === "" ? undefined : arg),
+    z.string().min(3).max(20).optional(),
+  ),
+  address: z.preprocess(
+    (arg) => (arg === "" ? undefined : arg),
+    z.string().min(3).max(100).optional(),
+  ),
+});
+
 export function CustomerDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      phone: "",
+      address: "",
+    },
+  });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
@@ -40,6 +78,10 @@ export function CustomerDataTable<TData, TValue>({
     },
   });
 
+  const onSubmit = (value: z.infer<typeof formSchema>) => {
+    console.log(value);
+  };
+
   return (
     <div className="grid h-full grid-rows-[auto,1fr] rounded-md border">
       <div className="flex p-2">
@@ -51,9 +93,62 @@ export function CustomerDataTable<TData, TValue>({
           }
           className="m-2 w-1/3 text-lg"
         />
-        <Button variant="outline" className="ml-auto">
-          Add
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Add
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>Add Customer</DialogHeader>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-bold">Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-bold">Phone</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-bold">Address</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="mt-2 flex justify-end">
+                  <Button>Submit</Button>
+                </div>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
       </div>
       <div className="relative h-full w-full">
         <div className="absolute inset-0 overflow-y-auto">
