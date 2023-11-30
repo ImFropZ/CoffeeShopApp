@@ -12,10 +12,12 @@ type User = {
     url: string;
   };
   role: z.infer<typeof roleSchema>;
+  fullName: string;
 };
 
 const initialState: User = {
   isLogin: false,
+  fullName: "",
   username: "",
   email: "",
   picture: {
@@ -51,8 +53,9 @@ const userSlice = createSlice({
   },
   extraReducers(builders) {
     builders.addCase(initUser.fulfilled, (state, action) => {
-      const { email, role, username } = action.payload;
+      const { fullName, email, role, username } = action.payload;
 
+      state.fullName = fullName;
       state.username = username;
       state.email = email;
       state.isLogin = true;

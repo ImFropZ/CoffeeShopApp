@@ -5,6 +5,7 @@ export const profileSchema = z.object({
   email: z.string().email().nullable(),
   username: z.string(),
   role: roleSchema,
+  fullName: z.string(),
 });
 
 export const loginSchema = z.object({
@@ -29,4 +30,5 @@ export const registerResponseSchema = z.object({
   username: z.string(),
   email: z.string().email().nullable(),
   role: roleSchema,
+  fullName: z.string(),
 });

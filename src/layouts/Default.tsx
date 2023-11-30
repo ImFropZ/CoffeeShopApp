@@ -8,7 +8,7 @@ interface DefaultProps {
 
 function Default({ children }: DefaultProps) {
   const dispatch = useAppDispatch();
-  const { username, role } = useAppSelector((state) => state.user);
+  const { fullName, role } = useAppSelector((state) => state.user);
 
   return (
     <div className="absolute inset-0 grid h-screen grid-rows-[auto,1fr]">
@@ -24,7 +24,7 @@ function Default({ children }: DefaultProps) {
         </button>
       </header>
       <div className="grid h-full grid-cols-[auto,1fr]">
-        <div className="h-full border-r-2 bg-slate-100 px-2 w-48">
+        <div className="h-full border-r-2 bg-slate-100 px-2 min-w-[12rem]">
           <div className="my-4 flex gap-3 px-2">
             <img
               src="https://avatars.githubusercontent.com/u/46731773?v=4"
@@ -34,7 +34,7 @@ function Default({ children }: DefaultProps) {
               height={50}
             />
             <div>
-              <h1 className="font-bold">{username}</h1>
+              <h1 className="font-bold">{fullName}</h1>
               <p>{role}</p>
             </div>
           </div>
