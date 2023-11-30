@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const formSchema = z.object({
-  fullname: z
+  fullName: z
     .string()
     .min(5, {
       message: "Fullname must be at least 5 characters.",
@@ -44,11 +44,13 @@ const formSchema = z.object({
 });
 
 function ProfileSetting() {
-  const { username, email, role } = useAppSelector((state) => state.user);
+  const { fullName, username, email, role } = useAppSelector(
+    (state) => state.user,
+  );
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullname: undefined,
+      fullName: fullName,
       username: username,
       email: email || undefined,
       oldPassword: undefined,
@@ -67,7 +69,7 @@ function ProfileSetting() {
           <AvatarImage src="https://github.com/imfropz.png" alt={username} />
           <AvatarFallback>{username}</AvatarFallback>
         </Avatar>
-        <h1 className="mt-4 text-2xl font-bold">{username}</h1>
+        <h1 className="mt-4 text-2xl font-bold">{fullName}</h1>
         <p className="mt-2 text-gray-500">{role}</p>
       </div>
 
@@ -78,10 +80,10 @@ function ProfileSetting() {
         >
           <FormField
             control={form.control}
-            name="fullname"
+            name="fullName"
             render={({ field }) => (
               <FormItem className="h-fit">
-                <FormLabel className="font-bold">Fullname</FormLabel>
+                <FormLabel className="font-bold">Full Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Lim Tangmeng" {...field} />
                 </FormControl>
