@@ -14,7 +14,6 @@ import {
 } from "../ui/alert-dialog";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -37,7 +36,7 @@ import {
 import { Textarea } from "../ui/textarea";
 import { useAppDispatch } from "@/hooks/redux";
 import { updateCustomer } from "@/redux";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 export const customerColumns: ColumnDef<Customer>[] = [
   {
