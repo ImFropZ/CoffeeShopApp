@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,6 +12,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { login as authLogin } from "@/redux";
+import { useAppDispatch } from "@/hooks/redux";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -24,6 +26,8 @@ const formSchema = z.object({
 });
 
 function Login() {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,8 +37,12 @@ function Login() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    const { username, password } = values;
+    dispatch(authLogin({ data: username, password })).then(() => {
+      navigate("/");
+    });
   }
+
   return (
     <div className="absolute inset-0 flex h-screen justify-center pt-10">
       <Form {...form}>

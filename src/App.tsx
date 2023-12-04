@@ -1,6 +1,6 @@
-import { Routes, Route, Outlet, Navigate } from "react-router-dom";
+import { Routes, Route, Outlet, Navigate, useNavigate } from "react-router-dom";
 import { Dashboard, Menu, Stock, Login } from "./routes";
-import { Authentication, Unauthentication } from "./routes/helpers";
+import { Authentication } from "./routes/helpers";
 import { Default, SettingLayout } from "./layouts";
 import {
   ProfileSetting,
@@ -9,8 +9,20 @@ import {
   GeneralSetting,
 } from "./routes/settings";
 import { InvoiceReport, StockReport } from "./routes/reports";
+import { useEffect } from "react";
+import { initUser } from "./redux";
+import { useAppDispatch } from "./hooks/redux";
 
 function App() {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(initUser()).then(() => {
+      navigate(-1);
+    });
+  }, []);
+
   return (
     <Routes>
       <Route path="/" element={<Authentication />}>
@@ -52,9 +64,7 @@ function App() {
           </Route>
         </Route>
       </Route>
-      <Route path="/" element={<Unauthentication />}>
-        <Route path="/login" element={<Login />} />
-      </Route>
+      <Route path="/login" element={<Login />} />
     </Routes>
   );
 }

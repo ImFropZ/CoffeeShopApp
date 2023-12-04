@@ -1,64 +1,90 @@
-import { Input } from "./ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
-import { LuX } from "react-icons/lu";
+import { LuChevronLeft, LuChevronRight, LuX } from "react-icons/lu";
 import { Skeleton } from "./ui/skeleton";
+import { z } from "zod";
+import { menuItemOrderSchema } from "@/schema/order";
+import { useAppDispatch } from "@/hooks/redux";
+import { decreaseQtyToOrder, increaseQtyToOrder, removeOrder } from "@/redux";
 
-interface CheckoutItemProps {
-  title: string;
-  imageSrc: string;
+interface CheckoutItemProps extends z.infer<typeof menuItemOrderSchema> {
+  picture: string;
+  name: string;
+  price: number;
 }
 
-function CheckoutItem({ title, imageSrc }: CheckoutItemProps) {
+function CheckoutItem({
+  id,
+  picture,
+  name,
+  price,
+  cupSize,
+  ice,
+  sugar,
+  quantity,
+}: CheckoutItemProps) {
+  const dispatch = useAppDispatch();
   const [isImageLoaded, setImageLoaded] = useState<boolean>(false);
 
   return (
     <div className="relative my-2 border-y-[1px] py-2">
       <div className="flex items-center gap-2">
-        {!isImageLoaded ? <Skeleton className="aspect-square w-16" /> : null}
+        {!isImageLoaded ? (
+          <Skeleton className="aspect-square w-16 object-cover" />
+        ) : null}
         <img
-          src={imageSrc}
-          alt={title}
-          className={
-            "aspect-square w-16 rounded " + (!isImageLoaded && "hidden")
-          }
+          src={picture}
+          alt={name}
+          className="aspect-square w-16 rounded object-cover"
+          hidden={!isImageLoaded}
           onLoad={() => {
             setImageLoaded(true);
           }}
         />
-        <div>
-          {title} - {"M"} - {"100%"}
+        <div className="flex h-full flex-col justify-start">
+          <p className="font-bold">{name}</p>
+          <p className="text-stone-500">
+            {cupSize} - {ice} - {sugar}
+          </p>
         </div>
-        <div className="ml-auto">$3</div>
+        <div className="ml-auto">${price}</div>
       </div>
       <div className="flex items-center justify-between gap-2">
         <span className="text-lg">Quantity</span>
-        <Input type="number" className="w-32" defaultValue={1} />
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="text-lg">Cup Size</span>
-        <RadioGroup defaultValue="small" className="my-2 flex">
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="small" id="small" defaultChecked />
-            <Label htmlFor="small">Small</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="medium" id="medium" />
-            <Label htmlFor="medium">Medium</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="large" id="large" />
-            <Label htmlFor="large">Large</Label>
-          </div>
-        </RadioGroup>
-      </div>
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-lg">Sugar(%)</span>
-        <Input type="number" className="w-32" defaultValue={100} />
+        <div className="flex items-center gap-2">
+          <button
+            className="rounded-full bg-slate-200 p-2"
+            disabled={quantity < 2}
+            onClick={() => {
+              dispatch(decreaseQtyToOrder({ id, cupSize, ice, sugar }));
+            }}
+          >
+            <LuChevronLeft />
+          </button>
+          <span>{quantity}</span>
+          <button
+            className="rounded-full bg-slate-200 p-2"
+            onClick={() => {
+              dispatch(increaseQtyToOrder({ id, cupSize, ice, sugar }));
+            }}
+          >
+            <LuChevronRight />
+          </button>
+        </div>
       </div>
       <div className="absolute right-0 top-0 h-6 w-6 rounded-full hover:bg-slate-200">
-        <button className="p-1">
+        <button
+          className="p-1"
+          onClick={() => {
+            dispatch(
+              removeOrder({
+                id,
+                cupSize,
+                ice,
+                sugar,
+              }),
+            );
+          }}
+        >
           <LuX className="text-red-600" />
         </button>
       </div>
