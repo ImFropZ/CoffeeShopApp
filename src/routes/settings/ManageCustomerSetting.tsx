@@ -1,23 +1,19 @@
-import {
-  Customer,
-  CustomerDataTable,
-  customerColumns,
-} from "@/components/customer";
-
-const data: Customer[] = [];
-
-Array.from({ length: 100 }).forEach((_, index) => {
-  data.push({
-    id: index + 1 + "",
-    name: "Lim Tangmeng",
-    phoneNumber: "0123456789",
-  });
-});
+import { CustomerDataTable, customerColumns } from "@/components/customer";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { useEffect } from "react";
+import { initCustomers } from "@/redux";
 
 function ManageCustomerSetting() {
+  const dispatch = useAppDispatch();
+  const customers = useAppSelector((state) => state.customers.data);
+
+  useEffect(() => {
+    dispatch(initCustomers());
+  }, []);
+
   return (
     <div>
-      <CustomerDataTable columns={customerColumns} data={data} />
+      <CustomerDataTable columns={customerColumns} data={customers} />
     </div>
   );
 }

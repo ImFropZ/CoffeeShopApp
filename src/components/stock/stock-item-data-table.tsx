@@ -1,6 +1,5 @@
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -29,6 +28,8 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { useState } from "react";
 import { format } from "date-fns";
+import { useAppDispatch } from "@/hooks/redux";
+import { addStockItem } from "@/redux/stock";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -38,32 +39,24 @@ interface DataTableProps<TData, TValue> {
 export function StockItemDataTable<TData, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  stockId,
+}: DataTableProps<TData, TValue> & { stockId: string }) {
+  const dispatch = useAppDispatch();
+  const [newStockItem, setNewStockItem] = useState({
+    expireDate: new Date(),
+    quantity: 1,
+    price: 1,
+  });
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      columnFilters,
-    },
   });
 
   return (
     <div className="absolute inset-0 grid grid-rows-[auto,1fr] rounded-md border">
-      <div className="flex items-center">
-        <Input
-          placeholder="Search..."
-          value={
-            (table.getColumn("expireDate")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("expireDate")?.setFilterValue(event.target.value)
-          }
-          className="m-2 w-1/3 text-lg"
-        />
+      <div className="flex items-center py-2">
         <Dialog>
           <DialogTrigger asChild>
             <Button className="ml-auto mr-2" variant="outline">
@@ -82,16 +75,61 @@ export function StockItemDataTable<TData, TValue>({
               <Label>Expire Date</Label>
               <Input
                 type="date"
-                defaultValue={format(new Date(), "yyyy-MM-dd")}
+                value={format(newStockItem.expireDate, "yyyy-MM-dd")}
+                onChange={(e) => {
+                  setNewStockItem({
+                    ...newStockItem,
+                    expireDate: new Date(e.currentTarget.value),
+                  });
+                }}
               />
               <Label>Quantity</Label>
-              <Input type="number" defaultValue={1} />
+              <Input
+                type="number"
+                value={newStockItem.quantity}
+                onChange={(e) => {
+                  setNewStockItem({
+                    ...newStockItem,
+                    quantity: parseInt(e.currentTarget.value),
+                  });
+                }}
+              />
               <Label>Price</Label>
-              <Input type="number" defaultValue={1} />
+              <Input
+                type="number"
+                value={newStockItem.price}
+                onChange={(e) => {
+                  setNewStockItem({
+                    ...newStockItem,
+                    price: parseFloat(e.currentTarget.value),
+                  });
+                }}
+              />
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button type="submit">Save changes</Button>
+                <Button
+                  type="submit"
+                  onClick={() => {
+                    dispatch(
+                      addStockItem({
+                        ...newStockItem,
+                        stockId,
+                        expiresDate: format(
+                          newStockItem.expireDate,
+                          "yyyy-MM-dd",
+                        ),
+                      }),
+                    );
+                    setNewStockItem({
+                      expireDate: new Date(),
+                      quantity: 1,
+                      price: 1,
+                    });
+                  }}
+                >
+                  Add
+                </Button>
               </DialogClose>
             </DialogFooter>
           </DialogContent>
@@ -122,6 +160,7 @@ export function StockItemDataTable<TData, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                className=""
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
