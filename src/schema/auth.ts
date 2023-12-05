@@ -6,6 +6,9 @@ export const profileSchema = z.object({
   username: z.string(),
   role: roleSchema,
   fullName: z.string(),
+  picture: z.object({
+    url: z.string(),
+  }),
 });
 
 export const loginSchema = z.object({

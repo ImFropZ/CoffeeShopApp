@@ -1,4 +1,4 @@
-import axios from "@/config/axios";
+import { jsonAxios } from "@/config/axios";
 
 export type Customer = {
   id: string;
@@ -33,19 +33,19 @@ export type UpdateCustomer = {
 };
 
 export const getCustomers = async () => {
-  return await axios
+  return await jsonAxios
     .get<{ data: Customer[] }>("/customers")
     .then((res) => res.data.data);
 };
 
 export const createCustomer = async (customer: CreateCustomer) => {
-  return await axios
+  return await jsonAxios
     .post<{ data: Customer }>("/customers", customer)
     .then((res) => res.data.data);
 };
 
 export const updateCustomer = async (id: string, customer: UpdateCustomer) => {
-  return await axios
+  return await jsonAxios
     .put<{ data: Customer }>("/customers/" + id, customer)
     .then((res) => res.data.data);
 };

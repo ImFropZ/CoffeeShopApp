@@ -1,4 +1,8 @@
-import { getProfile, login as authLogin } from "@/lib/axios/auth";
+import {
+  getProfile,
+  login as authLogin,
+  updateProfile as authUpdateProfile,
+} from "@/lib/axios/auth";
 import { roleSchema } from "@/schema";
 import { loginSchema } from "@/schema/auth";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
@@ -41,6 +45,14 @@ export const login = createAsyncThunk(
   },
 );
 
+export const updateProfile = createAsyncThunk(
+  "user/updateProfile",
+  async (data: FormData) => {
+    const user = await authUpdateProfile(data);
+    return user;
+  },
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -53,13 +65,14 @@ const userSlice = createSlice({
   },
   extraReducers(builders) {
     builders.addCase(initUser.fulfilled, (state, action) => {
-      const { fullName, email, role, username } = action.payload;
+      const { fullName, email, role, username, picture } = action.payload;
 
       state.fullName = fullName;
       state.username = username;
       state.email = email;
       state.isLogin = true;
       state.role = role;
+      state.picture.url = picture.url;
     });
     builders.addCase(initUser.rejected, (state) => {
       state.isLogin = false;
@@ -69,6 +82,15 @@ const userSlice = createSlice({
     });
     builders.addCase(login.rejected, (state) => {
       state.isLogin = false;
+    });
+    builders.addCase(updateProfile.fulfilled, (state, action) => {
+      const { fullName, email, role, username, picture } = action.payload;
+
+      state.fullName = fullName;
+      state.username = username;
+      state.email = email;
+      state.role = role;
+      state.picture.url = picture.url;
     });
   },
 });

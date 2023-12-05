@@ -1,4 +1,4 @@
-import axios from "@/config/axios";
+import { jsonAxios } from "@/config/axios";
 import {
   createMenuSchema,
   menuSchema,
@@ -7,13 +7,13 @@ import {
 import * as z from "zod";
 
 export async function getMenus() {
-  return axios
+  return jsonAxios
     .get<{ data: Array<z.infer<typeof menuSchema>> }>("/menus")
     .then((res) => res.data);
 }
 
 export async function createMenu(data: z.infer<typeof createMenuSchema>) {
-  return axios
+  return jsonAxios
     .post<z.infer<typeof menuItemResponseSchema>>("/menus", data)
     .then((res) => res.data);
 }
@@ -22,7 +22,7 @@ export async function updateMenu(
   id: string,
   data: z.infer<typeof createMenuSchema>,
 ) {
-  return axios
+  return jsonAxios
     .put<z.infer<typeof menuItemResponseSchema>>("/menus/" + id, data)
     .then((res) => res.data);
 }

@@ -1,17 +1,17 @@
-import axios from "@/config/axios";
+import { jsonAxios } from "@/config/axios";
 import { StockUpdate } from "@/redux/stock";
 import { stockItemSchema, stockSchema } from "@/schema/stock";
 import { z } from "zod";
 
 export const getStocks = async () => {
-  const res = await axios.get<{ data: z.infer<typeof stockSchema>[] }>(
+  const res = await jsonAxios.get<{ data: z.infer<typeof stockSchema>[] }>(
     "/stocks",
   );
   return res.data.data;
 };
 
 export const createStock = async (name: string) => {
-  const res = await axios.post<{
+  const res = await jsonAxios.post<{
     data: Omit<z.infer<typeof stockSchema>, "items">;
   }>("/stocks", {
     name,
@@ -20,7 +20,7 @@ export const createStock = async (name: string) => {
 };
 
 export const getStockItems = async (id: string) => {
-  const res = await axios.get<{ data: z.infer<typeof stockItemSchema>[] }>(
+  const res = await jsonAxios.get<{ data: z.infer<typeof stockItemSchema>[] }>(
     "/stocks/" + id + "/items",
   );
   return res.data.data;
@@ -32,7 +32,7 @@ export const createStockItem = async (
   quantity: number,
   price: number,
 ) => {
-  const res = await axios.post<{ data: z.infer<typeof stockItemSchema> }>(
+  const res = await jsonAxios.post<{ data: z.infer<typeof stockItemSchema> }>(
     "/stocks/" + stockId + "/items",
     {
       expiresDate,
@@ -44,14 +44,14 @@ export const createStockItem = async (
 };
 
 export const removeStockItem = async (stockId: string, stockItemId: string) => {
-  const res = await axios.delete<{ data: z.infer<typeof stockItemSchema> }>(
+  const res = await jsonAxios.delete<{ data: z.infer<typeof stockItemSchema> }>(
     "/stocks/" + stockId + "/items/" + stockItemId,
   );
   return res.data.data;
 };
 
 export const updateStockItems = async (data: StockUpdate[]) => {
-  const res = await axios.put<{ data: z.infer<typeof stockItemSchema>[] }>(
+  const res = await jsonAxios.put<{ data: z.infer<typeof stockItemSchema>[] }>(
     "/stocks/items",
     [...data],
   );
