@@ -8,8 +8,11 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useAppSelector } from "@/hooks/redux";
 
 function GeneralSetting() {
+  const { data } = useAppSelector((state) => state.menus);
+
   return (
     <div className="p-2">
       <Dialog>
@@ -30,7 +33,7 @@ function GeneralSetting() {
             <h1 className="font-bold">Menus</h1>
           </DialogHeader>
           <div className="h-[25rem]">
-            <MenuDataTable columns={menuColumns} data={[{ name: "Example" }]} />
+            <MenuDataTable columns={menuColumns} data={data} />
           </div>
           <DialogFooter>
             <DialogClose asChild>

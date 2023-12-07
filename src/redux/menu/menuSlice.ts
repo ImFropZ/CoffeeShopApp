@@ -1,5 +1,13 @@
-import { createMenu, getMenus, updateMenu } from "@/lib/axios/menus";
-import { createMenuSchema, menuSchema, updateMenuSchema } from "@/schema/menus";
+import {
+  CreateMenu,
+  UpdateMenu,
+  createMenu,
+  getMenus,
+  updateMenu,
+  updateMenuItems as _updateMenuItems,
+  UpdateMenuItem,
+} from "@/lib/axios/menus";
+import { menuSchema } from "@/schema/menus";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as z from "zod";
 
@@ -15,21 +23,25 @@ export const initMenus = createAsyncThunk("menus/initMenus", async () => {
 
 export const addMenu = createAsyncThunk(
   "menus/createMenu",
-  async (item: z.infer<typeof createMenuSchema>) => {
+  async (item: CreateMenu) => {
     return await createMenu(item);
   },
 );
 
 export const changeMenu = createAsyncThunk(
   "menus/updateMenu",
-  async ({
-    id,
-    item,
-  }: {
-    id: string;
-    item: z.infer<typeof updateMenuSchema>;
-  }) => {
+  async ({ id, item }: { id: string; item: UpdateMenu }) => {
     return await updateMenu(id, item);
+  },
+);
+
+export const updateMenuItems = createAsyncThunk(
+  "menus/updateMenuItems",
+  async ({ id, items }: { id: string; items: UpdateMenuItem[] }) => {
+    const updatedMenus = await _updateMenuItems(id, items);
+
+    // Return the latest update menu
+    return updatedMenus[updatedMenus.length - 1];
   },
 );
 
@@ -52,13 +64,7 @@ const menuSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(addMenu.fulfilled, (state, action) => {
-      const newMenus = state.data.map((menu) => {
-        if (menu.name === action.payload.name) {
-          menu.data.push(action.payload);
-        }
-        return menu;
-      });
-      state.data = newMenus;
+      state.data.push(action.payload);
       state.isLoading = false;
     });
     builder.addCase(addMenu.rejected, (state) => {
@@ -71,6 +77,17 @@ const menuSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(changeMenu.rejected, (state) => {
+      state.isLoading = false;
+    });
+    builder.addCase(updateMenuItems.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateMenuItems.fulfilled, (state, action) => {
+      const index = state.data.findIndex((m) => m.id === action.payload.id);
+      state.data[index] = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(updateMenuItems.rejected, (state) => {
       state.isLoading = false;
     });
   },

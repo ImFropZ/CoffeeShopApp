@@ -1,10 +1,26 @@
-import { jsonAxios } from "@/config/axios";
-import {
-  createMenuSchema,
-  menuSchema,
-  menuItemResponseSchema,
-} from "@/schema/menus";
+import { formAxios, jsonAxios } from "@/config/axios";
+import { drinkTypeSchema } from "@/schema";
+import { menuSchema } from "@/schema/menus";
 import * as z from "zod";
+
+export type CreateMenu = {
+  name: string;
+  drinkType: z.infer<typeof drinkTypeSchema>;
+  categories: string[];
+};
+
+export type UpdateMenu = {
+  name?: string;
+  drinkType?: z.infer<typeof drinkTypeSchema>;
+  categories?: string[];
+};
+
+export type UpdateMenuItem = {
+  id: string;
+  price?: number;
+  picture?: File;
+  isActive?: boolean;
+};
 
 export async function getMenus() {
   return jsonAxios
@@ -12,17 +28,31 @@ export async function getMenus() {
     .then((res) => res.data);
 }
 
-export async function createMenu(data: z.infer<typeof createMenuSchema>) {
+export async function createMenu(data: CreateMenu) {
   return jsonAxios
-    .post<z.infer<typeof menuItemResponseSchema>>("/menus", data)
+    .post<z.infer<typeof menuSchema>>("/menus", data)
     .then((res) => res.data);
 }
 
-export async function updateMenu(
-  id: string,
-  data: z.infer<typeof createMenuSchema>,
-) {
+export async function updateMenu(id: string, data: UpdateMenu) {
   return jsonAxios
-    .put<z.infer<typeof menuItemResponseSchema>>("/menus/" + id, data)
+    .put<z.infer<typeof menuSchema>>("/menus/" + id, data)
     .then((res) => res.data);
+}
+
+export async function updateMenuItems(id: string, data: UpdateMenuItem[]) {
+  const promises = data.map((item) => {
+    const form = new FormData();
+    form.append("id", item.id);
+    if (item.price) form.append("price", item.price.toString());
+    if (item.picture) form.append("picture", item.picture);
+    if (item.isActive) form.append("isActive", item.isActive.toString());
+
+    return formAxios.put<z.infer<typeof menuSchema>>(
+      "/menus/" + id + "/items",
+      item,
+    );
+  });
+
+  return Promise.all(promises).then((res) => res.map((r) => r.data));
 }

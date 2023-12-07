@@ -19,7 +19,7 @@ import { Label } from "@/components/ui/label";
 
 function Menu() {
   const dispatch = useAppDispatch();
-  const { data, isLoading } = useAppSelector((state) => state.menus);
+  const menu = useAppSelector((state) => state.menus);
   const { menus } = useAppSelector((state) => state.orders);
   const [searchInput, setSearchInput] = useState("");
 
@@ -28,7 +28,7 @@ function Menu() {
     dispatch(loadFromLocalStorage());
   }, []);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (menu.isLoading) return <div>Loading...</div>;
 
   return (
     <div className="grid h-full grid-cols-3">
@@ -45,20 +45,24 @@ function Menu() {
         <div className="relative mt-2">
           <div className="absolute inset-0 overflow-y-auto">
             <div className="grid grid-cols-[repeat(auto-fill,200px)] grid-rows-[repeat(auto-fill,auto)] justify-center gap-2">
-              {data.map(
+              {menu.data.map(
                 (item) =>
                   (item.name
                     .toLowerCase()
                     .includes(searchInput.toLowerCase()) ||
-                    searchInput === "") && (
+                    searchInput === "") &&
+                  (item.menuItems.filter((item) => item.isActive).length > 0 ? (
                     <MenuItem
-                      imageSrc={item.picture}
+                      imageSrc={
+                        item.menuItems.find((item) => item.picture !== "")
+                          ?.picture || ""
+                      }
                       title={item.name}
                       className=""
                       key={item.name}
-                      data={item.data}
+                      data={item.menuItems.filter((item) => item.isActive)}
                     ></MenuItem>
-                  ),
+                  ) : null),
               )}
             </div>
           </div>

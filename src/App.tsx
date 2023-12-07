@@ -10,7 +10,7 @@ import {
 } from "./routes/settings";
 import { InvoiceReport, StockReport } from "./routes/reports";
 import { useEffect } from "react";
-import { initUser } from "./redux";
+import { initCustomers, initMenus, initStocks, initUser } from "./redux";
 import { useAppDispatch } from "./hooks/redux";
 
 function App() {
@@ -19,6 +19,9 @@ function App() {
 
   useEffect(() => {
     dispatch(initUser()).then(() => {
+      dispatch(initMenus());
+      dispatch(initStocks());
+      dispatch(initCustomers());
       navigate(-1);
     });
   }, []);

@@ -19,6 +19,7 @@ import { Input } from "../ui/input";
 import { useState } from "react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -44,9 +45,8 @@ export function MenuDataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [newMenu, setNewMenu] = useState({
     name: "",
-    iamge: "",
-    price: 0,
-    cupSize: "SMALL" as "SMALL" | "MEDIUM" | "LARGE",
+    drinkType: "COLD" as "COLD" | "HOT" | "FRAPPE",
+    categories: "",
   });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
@@ -63,9 +63,8 @@ export function MenuDataTable<TData, TValue>({
   const resetFormValue = () => {
     setNewMenu({
       name: "",
-      iamge: "",
-      price: 0,
-      cupSize: "SMALL",
+      drinkType: "COLD" as "COLD" | "HOT" | "FRAPPE",
+      categories: "",
     });
   };
 
@@ -93,53 +92,70 @@ export function MenuDataTable<TData, TValue>({
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader>Add User</DialogHeader>
+            <DialogHeader className="font-bold">Add Menu</DialogHeader>
             <div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Name</Label>
+                  <Input
+                    value={newMenu.name}
+                    onChange={(e) =>
+                      setNewMenu((prev) => ({
+                        ...prev,
+                        name: e.currentTarget.value,
+                      }))
+                    }
+                  />
+                </div>
+                <div>
+                  <Label>Drink type</Label>
+                  <Select
+                    defaultValue="COLD"
+                    onValueChange={(e) => {
+                      setNewMenu((prev) => ({
+                        ...prev,
+                        drinkType: e as "COLD" | "HOT" | "FRAPPE",
+                      }));
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="COLD">COLD ❄️</SelectItem>
+                      <SelectItem value="HOT">HOT 🔥</SelectItem>
+                      <SelectItem value="FRAPPE">FRAPPE 🥤</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
               <div>
-                <Label>Name</Label>
+                <Label>Categories</Label>
+                <p className="text-sm text-muted-foreground">
+                  The categories can be separate by ','
+                </p>
                 <Input
-                  value={newMenu.name}
+                  placeholder="Ex: Milk Tea, Fruit Tea, Smoothie"
+                  value={newMenu.categories}
                   onChange={(e) =>
                     setNewMenu((prev) => ({
                       ...prev,
-                      name: e.currentTarget.value,
+                      categories: e.currentTarget.value,
                     }))
                   }
                 />
-              </div>
-              <div>
-                <Label>Price</Label>
-                <Input
-                  type="number"
-                  value={newMenu.price}
-                  onChange={(e) =>
-                    setNewMenu((prev) => ({
-                      ...prev,
-                      price: Number(e.currentTarget.value),
-                    }))
-                  }
-                />
-              </div>
-              <div>
-                <Label>Cup Size</Label>
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="SMALL">Small</SelectItem>
-                    <SelectItem value="MEDIUM">Medium</SelectItem>
-                    <SelectItem value="LARGE">Large</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
             </div>
             <DialogFooter>
-              <div>
-                <Button variant="outline" onClick={resetFormValue}>
-                  Cancel
-                </Button>
-                <Button onClick={onSubmit}>Add</Button>
+              <div className="flex gap-4">
+                <DialogClose asChild>
+                  <Button variant="outline" onClick={resetFormValue}>
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <DialogClose asChild>
+                  <Button onClick={onSubmit}>Add</Button>
+                </DialogClose>
               </div>
             </DialogFooter>
           </DialogContent>

@@ -41,7 +41,7 @@ export const login = createAsyncThunk(
     const { accessToken, tokenType } = await authLogin(data);
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("tokenType", tokenType);
-    initUser();
+    return await getProfile();
   },
 );
 
@@ -77,8 +77,16 @@ const userSlice = createSlice({
     builders.addCase(initUser.rejected, (state) => {
       state.isLogin = false;
     });
-    builders.addCase(login.fulfilled, (state) => {
+    builders.addCase(login.fulfilled, (state, action) => {
+      const { fullName, email, role, username, picture } = action.payload;
       state.isLogin = true;
+
+      state.fullName = fullName;
+      state.username = username;
+      state.email = email;
+      state.isLogin = true;
+      state.role = role;
+      state.picture.url = picture.url;
     });
     builders.addCase(login.rejected, (state) => {
       state.isLogin = false;
