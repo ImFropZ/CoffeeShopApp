@@ -33,6 +33,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useAppDispatch } from "@/hooks/redux";
+import { addMenu } from "@/redux";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -43,6 +45,7 @@ export function MenuDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const dispatch = useAppDispatch();
   const [newMenu, setNewMenu] = useState({
     name: "",
     drinkType: "COLD" as "COLD" | "HOT" | "FRAPPE",
@@ -69,7 +72,16 @@ export function MenuDataTable<TData, TValue>({
   };
 
   const onSubmit = () => {
-    console.log(newMenu);
+    dispatch(
+      addMenu({
+        name: newMenu.name,
+        drinkType: newMenu.drinkType,
+        categories: newMenu.categories
+          .split(",")
+          .map((category) => category.trim())
+          .join(""),
+      }),
+    );
     resetFormValue();
   };
 

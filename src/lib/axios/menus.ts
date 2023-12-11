@@ -6,7 +6,7 @@ import * as z from "zod";
 export type CreateMenu = {
   name: string;
   drinkType: z.infer<typeof drinkTypeSchema>;
-  categories: string[];
+  categories: string;
 };
 
 export type UpdateMenu = {
@@ -23,21 +23,21 @@ export type UpdateMenuItem = {
 };
 
 export async function getMenus() {
-  return jsonAxios
+  return await jsonAxios
     .get<{ data: Array<z.infer<typeof menuSchema>> }>("/menus")
     .then((res) => res.data);
 }
 
 export async function createMenu(data: CreateMenu) {
-  return jsonAxios
-    .post<z.infer<typeof menuSchema>>("/menus", data)
-    .then((res) => res.data);
+  return await jsonAxios
+    .post<{ data: z.infer<typeof menuSchema> }>("/menus", data)
+    .then((res) => res.data.data);
 }
 
 export async function updateMenu(id: string, data: UpdateMenu) {
-  return jsonAxios
-    .put<z.infer<typeof menuSchema>>("/menus/" + id, data)
-    .then((res) => res.data);
+  return await jsonAxios
+    .put<{ data: z.infer<typeof menuSchema> }>("/menus/" + id, data)
+    .then((res) => res.data.data);
 }
 
 export async function updateMenuItems(id: string, data: UpdateMenuItem[]) {
