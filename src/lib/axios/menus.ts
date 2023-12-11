@@ -12,7 +12,7 @@ export type CreateMenu = {
 export type UpdateMenu = {
   name?: string;
   drinkType?: z.infer<typeof drinkTypeSchema>;
-  categories?: string[];
+  categories?: string;
 };
 
 export type UpdateMenuItem = {

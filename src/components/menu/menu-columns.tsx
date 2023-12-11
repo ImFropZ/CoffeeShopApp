@@ -23,6 +23,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import { MenuItemsDialogContent } from "..";
+import { useAppDispatch } from "@/hooks/redux";
+import { changeMenu } from "@/redux";
 
 export const menuColumns: ColumnDef<z.infer<typeof menuSchema>>[] = [
   {
@@ -73,6 +75,7 @@ export const menuColumns: ColumnDef<z.infer<typeof menuSchema>>[] = [
   {
     header: "Actions",
     cell: ({ cell }) => {
+      const dispatch = useAppDispatch();
       const { id, name, drinkType, categories, menuItems } = cell.row.original;
 
       const [newMenu, setNewMenu] = useState({
@@ -80,6 +83,18 @@ export const menuColumns: ColumnDef<z.infer<typeof menuSchema>>[] = [
         drinkType: drinkType,
         categories: categories.join(","),
       });
+
+      const onUpdate = () => {
+        if (
+          newMenu.name === name &&
+          newMenu.drinkType === drinkType &&
+          newMenu.categories === categories.join(",")
+        ) {
+          return;
+        }
+
+        dispatch(changeMenu({ id, item: newMenu }));
+      };
 
       return (
         <div className="flex gap-2">
@@ -155,7 +170,9 @@ export const menuColumns: ColumnDef<z.infer<typeof menuSchema>>[] = [
                   </Button>
                 </DialogClose>
                 <DialogClose asChild>
-                  <Button className="mr-2">Save</Button>
+                  <Button className="mr-2" onClick={onUpdate}>
+                    Save
+                  </Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>

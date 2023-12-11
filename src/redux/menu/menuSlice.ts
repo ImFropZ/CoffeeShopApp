@@ -73,7 +73,9 @@ const menuSlice = createSlice({
     builder.addCase(changeMenu.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(changeMenu.fulfilled, (state) => {
+    builder.addCase(changeMenu.fulfilled, (state, action) => {
+      const index = state.data.findIndex((m) => m.id === action.payload.id);
+      state.data[index] = action.payload;
       state.isLoading = false;
     });
     builder.addCase(changeMenu.rejected, (state) => {
