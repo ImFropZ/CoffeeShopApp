@@ -18,7 +18,7 @@ export type UpdateMenu = {
 export type UpdateMenuItem = {
   id: string;
   price?: number;
-  picture?: File;
+  image?: File;
   isActive?: boolean;
 };
 
@@ -45,7 +45,7 @@ export async function updateMenuItems(id: string, data: UpdateMenuItem[]) {
     const form = new FormData();
     form.append("id", item.id);
     if (item.price) form.append("price", item.price.toString());
-    if (item.picture) form.append("picture", item.picture);
+    if (item.image) form.append("image", item.image);
     if (item.isActive) form.append("isActive", item.isActive.toString());
 
     return formAxios.put<z.infer<typeof menuSchema>>(
