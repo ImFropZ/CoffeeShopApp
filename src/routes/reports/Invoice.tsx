@@ -8,6 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { getInvoices } from "@/lib/axios/invoices";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import {
@@ -18,11 +19,20 @@ import {
   endOfMonth,
   startOfYear,
   endOfYear,
+  subDays,
+  addDays,
+  subWeeks,
+  addWeeks,
+  subMonths,
+  addMonths,
+  subYears,
+  addYears,
 } from "date-fns";
 import { useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { DateRange } from "react-day-picker";
 import { FaFileExcel, FaGreaterThan, FaLessThan } from "react-icons/fa6";
+import { useQuery } from "@tanstack/react-query";
 
 function InvoiceReport() {
   const [date, setDate] = useState<DateRange>({
@@ -32,6 +42,14 @@ function InvoiceReport() {
   const [reportType, setReportType] = useState<
     "daily" | "weekly" | "monthly" | "yearly" | "custom"
   >("daily");
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["todos", date],
+    queryFn: () => getInvoices(date),
+  });
+
+  console.log(data);
+  console.log(error);
 
   return (
     <div className="grid h-full grid-rows-[auto,1fr] p-2">
@@ -69,10 +87,86 @@ function InvoiceReport() {
             />
           </PopoverContent>
         </Popover>
-        <Button variant="outline">
+        <Button
+          variant="outline"
+          onClick={() => {
+            switch (reportType) {
+              case "daily":
+                if (date.from && date.to) {
+                  setDate({
+                    from: subDays(date.from, 1),
+                    to: subDays(date.to, 1),
+                  });
+                }
+                break;
+              case "weekly":
+                if (date.from && date.to) {
+                  setDate({
+                    from: subWeeks(date.from, 1),
+                    to: subWeeks(date.to, 1),
+                  });
+                }
+                break;
+              case "monthly":
+                if (date.from && date.to) {
+                  setDate({
+                    from: subMonths(date.from, 1),
+                    to: subMonths(date.to, 1),
+                  });
+                }
+                break;
+              case "yearly":
+                if (date.from && date.to) {
+                  setDate({
+                    from: subYears(date.from, 1),
+                    to: subYears(date.to, 1),
+                  });
+                }
+                break;
+            }
+          }}
+        >
           <FaLessThan />
         </Button>
-        <Button variant="outline">
+        <Button
+          variant="outline"
+          onClick={() => {
+            switch (reportType) {
+              case "daily":
+                if (date.from && date.to) {
+                  setDate({
+                    from: addDays(date.from, 1),
+                    to: addDays(date.to, 1),
+                  });
+                }
+                break;
+              case "weekly":
+                if (date.from && date.to) {
+                  setDate({
+                    from: addWeeks(date.from, 1),
+                    to: addWeeks(date.to, 1),
+                  });
+                }
+                break;
+              case "monthly":
+                if (date.from && date.to) {
+                  setDate({
+                    from: addMonths(date.from, 1),
+                    to: addMonths(date.to, 1),
+                  });
+                }
+                break;
+              case "yearly":
+                if (date.from && date.to) {
+                  setDate({
+                    from: addYears(date.from, 1),
+                    to: addYears(date.to, 1),
+                  });
+                }
+                break;
+            }
+          }}
+        >
           <FaGreaterThan />
         </Button>
         <Tabs className="ml-auto">
@@ -173,28 +267,7 @@ function InvoiceReport() {
           </div>
         </div>
         <div className="relative rounded bg-slate-50">
-          <InvoiceDataTable
-            columns={invoiceColumns}
-            data={Array.from({ length: 100 }).map(() => {
-              return {
-                id: "1",
-                customer: {
-                  id: "1",
-                  name: "Customer 1",
-                  phoneNumber: "08123456789",
-                },
-                cashier: {
-                  id: "1",
-                  name: "Cashier 1",
-                  permission: "cashier",
-                  picture: "",
-                },
-                date: "01-01-1970",
-                discount: 0,
-                totalPrice: 0,
-              };
-            })}
-          />
+          <InvoiceDataTable columns={invoiceColumns} data={data || []} />
         </div>
       </div>
     </div>

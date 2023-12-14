@@ -1,19 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { LuPrinter } from "react-icons/lu";
 import { Button } from "../ui/button";
-import { Customer } from "../customer";
-import { User } from "../user";
+import { z } from "zod";
+import { invoiceSchema } from "@/schema";
 
-export type Invoice = {
-  id: string;
-  customer: Customer;
-  cashier: User;
-  date: string;
-  discount: number;
-  totalPrice: number;
-};
-
-export const invoiceColumns: ColumnDef<Invoice>[] = [
+export const invoiceColumns: ColumnDef<z.infer<typeof invoiceSchema>>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -21,25 +12,25 @@ export const invoiceColumns: ColumnDef<Invoice>[] = [
   {
     header: "Customer",
     cell: ({ cell }) => {
-      return <div>{cell.row.original.customer.name}</div>;
+      return <div>{cell.row.original.customer?.name || ""}</div>;
     },
   },
   {
     header: "Cashier",
     cell: ({ cell }) => {
-      return <div>{cell.row.original.cashier.name}</div>;
+      return <div>{cell.row.original.cashier.fullName}</div>;
     },
   },
   {
     header: "Date",
     cell: ({ cell }) => {
-      return <div>{cell.row.original.date}</div>;
+      return <div>{cell.row.original.createdAt}</div>;
     },
   },
   {
     header: "Discount%",
     cell: ({ cell }) => {
-      return <div>{cell.row.original.discount}</div>;
+      return <div>{0}</div>;
     },
   },
   {
