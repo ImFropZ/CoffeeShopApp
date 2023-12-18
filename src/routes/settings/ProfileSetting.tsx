@@ -10,10 +10,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAppSelector } from "@/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { updateProfile } from "@/redux";
 
 const formSchema = z.object({
   fullName: z
@@ -44,7 +46,9 @@ const formSchema = z.object({
 });
 
 function ProfileSetting() {
-  const { fullName, username, email, role } = useAppSelector(
+  const dispatch = useAppDispatch();
+  const [image, setImage] = useState<File>();
+  const { fullName, username, email, role, picture } = useAppSelector(
     (state) => state.user,
   );
   const form = useForm<z.infer<typeof formSchema>>({
@@ -59,15 +63,58 @@ function ProfileSetting() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    const form = new FormData();
+
+    if (values.fullName) form.append("fullName", values.fullName);
+    if (values.username) form.append("username", values.username);
+    if (values.email) form.append("email", values.email);
+    if (values.oldPassword) form.append("oldPassword", values.oldPassword);
+    if (values.newPassword) form.append("newPassword", values.newPassword);
+    if (image) form.append("image", image);
+
+    if (image) console.log(new Blob([image], { type: image.type }));
+
+    dispatch(updateProfile(form));
+    setImage(undefined);
   }
 
   return (
     <div className="flex justify-center gap-10 pt-10">
       <div className="flex flex-col items-center">
-        <Avatar className="h-32 w-32">
-          <AvatarImage src="https://github.com/imfropz.png" alt={username} />
-          <AvatarFallback>{username}</AvatarFallback>
+        <Avatar className="relative h-32 w-32">
+          <AvatarImage
+            src={
+              image
+                ? URL.createObjectURL(new Blob([image], { type: image.type }))
+                : picture.url
+            }
+            alt={fullName}
+          />
+          <AvatarFallback>{fullName}</AvatarFallback>
+          <input
+            type="file"
+            className="absolute inset-0 cursor-pointer opacity-0"
+            title="Change profile picture"
+            accept="image/*"
+            onChange={(event) => {
+              const file = (event.target as HTMLInputElement).files?.[0];
+              if (file) {
+                // Check if file is an image
+                if (!file.type.startsWith("image/")) {
+                  console.log("File must be an image.");
+                  return;
+                }
+
+                // Check if file is larger than 5MB
+                if (file.size > 5 * 1024 * 1024) {
+                  console.log("File must be smaller than 5MB.");
+                  return;
+                }
+
+                setImage(file);
+              }
+            }}
+          />
         </Avatar>
         <h1 className="mt-4 text-2xl font-bold">{fullName}</h1>
         <p className="mt-2 text-gray-500">{role}</p>

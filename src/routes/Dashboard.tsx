@@ -8,6 +8,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
+import Table from "@/components/pdf/table/Table";
 
 function Dashboard() {
   return (
@@ -62,6 +63,23 @@ function Dashboard() {
           <Link to="/setting/manage-customer">Manage customers</Link>
         </Button>
       </div>
+
+      <Table
+        data={{
+          items: [
+            {
+              id: "1",
+              name: "test",
+              price: "100",
+            },
+            {
+              id: "2",
+              name: "test",
+              price: "100",
+            }
+          ],
+        }}
+      />
     </div>
   );
 }

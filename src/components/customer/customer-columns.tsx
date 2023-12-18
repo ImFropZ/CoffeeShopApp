@@ -1,17 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { LuPen, LuTrash } from "react-icons/lu";
+import { LuPen } from "react-icons/lu";
 import { Button } from "../ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../ui/alert-dialog";
 import {
   Dialog,
   DialogContent,
@@ -79,7 +68,7 @@ export const customerColumns: ColumnDef<Customer>[] = [
 
       const onSubmit = () => {
         const { name, phone, address } = form.getValues();
-        
+
         dispatch(
           updateCustomer({
             id: cell.row.original.id,
@@ -105,94 +94,72 @@ export const customerColumns: ColumnDef<Customer>[] = [
             setDialogOpen((prev) => !prev);
           }}
         >
-          <AlertDialog>
-            <div className="flex gap-4">
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="bg-green-500 text-white hover:bg-green-600 hover:text-white"
-                >
-                  <LuPen />
-                </Button>
-              </DialogTrigger>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="bg-red-500 text-white hover:bg-red-600 hover:text-white"
-                >
-                  <LuTrash />
-                </Button>
-              </AlertDialogTrigger>
-            </div>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edit Customer</DialogTitle>
-                <DialogDescription>
-                  Update your customer information.
-                </DialogDescription>
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="font-bold">Name</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="font-bold">
-                            Phone Number
-                          </FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="address"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="font-bold">Address</FormLabel>
-                          <FormControl>
-                            <Textarea {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <div className="mt-2 flex justify-end">
-                      <Button type="submit">Save changes</Button>
-                    </div>
-                  </form>
-                </Form>
-              </DialogHeader>
-            </DialogContent>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action can not be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <div className="flex gap-4">
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="bg-green-500 text-white hover:bg-green-600 hover:text-white"
+              >
+                <LuPen />
+              </Button>
+            </DialogTrigger>
+          </div>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Customer</DialogTitle>
+              <DialogDescription>
+                Update your customer information.
+              </DialogDescription>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">
+                          Phone Number
+                        </FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold">Address</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="mt-2 flex justify-end">
+                    <Button type="submit">Save changes</Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogHeader>
+          </DialogContent>
         </Dialog>
       );
     },

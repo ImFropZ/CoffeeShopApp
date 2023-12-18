@@ -57,7 +57,7 @@ function Login() {
               <FormItem>
                 <FormLabel className="font-bold">Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="username" {...field} />
                 </FormControl>
                 <FormDescription>
                   This is your public display name.

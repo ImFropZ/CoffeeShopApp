@@ -1,13 +1,20 @@
-FROM node:18
+FROM node:14.15.4-alpine3.12
 
+# Create app directory
+WORKDIR /usr/src/app
+
+# Install app dependencies
+COPY package*.json pnpm-lock.yaml ./
+
+# Install dependencies
 RUN npm install -g pnpm
-
-WORKDIR /app
-
-COPY package.json pnpm-lock.yaml ./
-
 RUN pnpm install
 
+# Bundle app source
 COPY . .
 
-CMD [ "npm", "run", "dev", "--", "--host" ]
+# Expose port 1420
+EXPOSE 1420
+
+# Run the app
+CMD [ "npm", "run", "dev" ]

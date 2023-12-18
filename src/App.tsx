@@ -10,7 +10,12 @@ import {
 } from "./routes/settings";
 import { InvoiceReport, StockReport } from "./routes/reports";
 import { useEffect } from "react";
-import { initUser } from "./redux";
+import {
+  initCustomers,
+  initStocks,
+  initUser,
+  loadFromLocalStorage,
+} from "./redux";
 import { useAppDispatch } from "./hooks/redux";
 
 function App() {
@@ -19,6 +24,9 @@ function App() {
 
   useEffect(() => {
     dispatch(initUser()).then(() => {
+      dispatch(initStocks());
+      dispatch(initCustomers());
+      dispatch(loadFromLocalStorage());
       navigate(-1);
     });
   }, []);

@@ -1,6 +1,6 @@
-import axios from "axios";
+import _axios from "axios";
 
-const instance = axios.create({
+export const jsonAxios = _axios.create({
   baseURL: import.meta.env.API_URI || "http://localhost:3000/api/v1",
   timeout: 1000,
   headers: {
@@ -9,14 +9,38 @@ const instance = axios.create({
 });
 
 // Add a request interceptor
-instance.interceptors.request.use((config) => {
-  // Do something before request is sent
-  const token = localStorage.getItem("accessToken");
-  config.headers.Authorization =  token ? `Bearer ${token}` : '';
-  return config;
-}, (error) => {
-  // Do something with request error
-  return Promise.reject(error);
+jsonAxios.interceptors.request.use(
+  (config) => {
+    // Do something before request is sent
+    const token = localStorage.getItem("accessToken");
+    config.headers.Authorization = token ? `Bearer ${token}` : "";
+    return config;
+  },
+  (error) => {
+    // Do something with request error
+    return Promise.reject(error);
+  },
+);
+
+export const formAxios = _axios.create({
+  baseURL: import.meta.env.API_URI || "http://localhost:3000/api/v1",
+  maxBodyLength: Infinity,
+  headers: {
+    Accept: "*/*",
+    "Content-Type": "multipart/form-data",
+  },
 });
 
-export default instance;
+// Add a request interceptor
+formAxios.interceptors.request.use(
+  (config) => {
+    // Do something before request is sent
+    const token = localStorage.getItem("accessToken");
+    config.headers.Authorization = token ? `Bearer ${token}` : "";
+    return config;
+  },
+  (error) => {
+    // Do something with request error
+    return Promise.reject(error);
+  },
+);
