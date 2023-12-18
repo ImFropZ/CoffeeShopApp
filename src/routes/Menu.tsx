@@ -1,38 +1,39 @@
-import { CheckoutItem, MenuItem } from "@/components";
-import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
-import { FaMagnifyingGlass } from "react-icons/fa6";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { initMenus, loadFromLocalStorage } from "@/redux";
-import { format } from "date-fns";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+  CategoriesSlide,
+  CheckoutDialogContent,
+  CheckoutItem,
+  MenuItem,
+} from "@/components";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import { format } from "date-fns";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { useQuery } from "@tanstack/react-query";
+import { getCategoies } from "@/lib/axios";
+import { getMenus } from "@/lib/axios/menus";
+import { useAppSelector } from "@/hooks/redux";
 
 function Menu() {
-  const dispatch = useAppDispatch();
-  const menu = useAppSelector((state) => state.menus);
-  const { menus } = useAppSelector((state) => state.orders);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const orderMenus = useAppSelector((state) => state.orders);
+  const categories = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategoies,
+  });
+
+  const menus = useQuery({
+    queryKey: ["menus", selectedCategory],
+    queryFn: () => getMenus(selectedCategory),
+  });
+
   const [searchInput, setSearchInput] = useState("");
 
-  useEffect(() => {
-    dispatch(initMenus());
-    dispatch(loadFromLocalStorage());
-  }, []);
-
-  if (menu.isLoading) return <div>Loading...</div>;
+  if (menus.isLoading || !menus.data) return <div>Loading...</div>;
 
   return (
     <div className="grid h-full grid-cols-3">
-      <div className="col-span-2 grid h-full grid-rows-[auto,1fr] px-2 pb-2">
+      <div className="col-span-2 grid h-full grid-rows-[auto,auto,1fr] px-2 pb-2">
         <div className="relative">
           <Input
             placeholder="Search..."
@@ -42,28 +43,45 @@ function Menu() {
           />
           <FaMagnifyingGlass className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 opacity-75" />
         </div>
+        <CategoriesSlide
+          _onSelect={(cateName) => setSelectedCategory(cateName)}
+          categories={
+            categories.data
+              ?.map((cat) => ({
+                name: cat,
+                isActive: selectedCategory === cat,
+              }))
+              .filter((cat) => cat.name !== "") ?? []
+          }
+        />
         <div className="relative mt-2">
           <div className="absolute inset-0 overflow-y-auto">
             <div className="grid grid-cols-[repeat(auto-fill,200px)] grid-rows-[repeat(auto-fill,auto)] justify-center gap-2">
-              {menu.data.map(
-                (item) =>
-                  (item.name
+              {menus.data.map((item) => {
+                if (item.menuItems.filter((item) => item.isActive).length === 0)
+                  return null;
+
+                if (
+                  !item.name
                     .toLowerCase()
-                    .includes(searchInput.toLowerCase()) ||
-                    searchInput === "") &&
-                  (item.menuItems.filter((item) => item.isActive).length > 0 ? (
-                    <MenuItem
-                      imageSrc={
-                        item.menuItems.find((item) => item.picture !== "")
-                          ?.picture || ""
-                      }
-                      title={item.name}
-                      className=""
-                      key={item.name}
-                      data={item.menuItems.filter((item) => item.isActive)}
-                    ></MenuItem>
-                  ) : null),
-              )}
+                    .includes(searchInput.toLowerCase()) &&
+                  searchInput !== ""
+                )
+                  return null;
+
+                return (
+                  <MenuItem
+                    imageSrc={
+                      item.menuItems.find((item) => item.picture !== "")
+                        ?.picture || ""
+                    }
+                    title={item.name}
+                    className=""
+                    key={item.id}
+                    data={item.menuItems.filter((item) => item.isActive)}
+                  />
+                );
+              })}
             </div>
           </div>
         </div>
@@ -75,8 +93,11 @@ function Menu() {
         </div>
         <div className="relative h-auto">
           <div className="absolute inset-0 overflow-auto pr-4">
-            {menus.map((item) => (
-              <CheckoutItem {...item} />
+            {orderMenus.menus.map((item) => (
+              <CheckoutItem
+                {...item}
+                key={`${item.id}-${item.cupSize}-${item.ice}-${item.name}-${item.sugar}-${item.attributes}`}
+              />
             ))}
           </div>
         </div>
@@ -86,20 +107,17 @@ function Menu() {
               Total :{" "}
               <span>
                 $
-                {menus.reduce(
+                {orderMenus.menus.reduce(
                   (total, menu) => total + menu.price * menu.quantity,
                   0,
                 )}
               </span>
             </div>
             <div>
-              Discount(0%) : <span>0%</span>
-            </div>
-            <div>
               Checkout :{" "}
               <span>
                 $
-                {menus.reduce(
+                {orderMenus.menus.reduce(
                   (total, menu) => total + menu.price * menu.quantity,
                   0,
                 )}
@@ -113,59 +131,7 @@ function Menu() {
                   Checkout
                 </button>
               </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>Checkout</DialogHeader>
-                <DialogDescription>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex justify-between">
-                      <div>Total</div>
-                      <div>
-                        $
-                        {menus.reduce(
-                          (total, menu) => total + menu.price * menu.quantity,
-                          0,
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex justify-between">
-                      <div>Discount</div>
-                      <div>0%</div>
-                    </div>
-                    <div className="flex justify-between">
-                      <div>Checkout</div>
-                      <div>
-                        $
-                        {menus.reduce(
-                          (total, menu) => total + menu.price * menu.quantity,
-                          0,
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </DialogDescription>
-                <DialogFooter>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button>Add discount</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <Label>Discount %</Label>
-                      <Input type="number" defaultValue={0}></Input>
-                      <DialogFooter>
-                        <DialogClose asChild>
-                          <Button variant={"ghost"}>Cancel</Button>
-                        </DialogClose>
-                        <DialogClose asChild>
-                          <Button>Confirm</Button>
-                        </DialogClose>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                  <DialogClose asChild>
-                    <Button>Make transaction</Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
+              <CheckoutDialogContent />
             </Dialog>
           </div>
         </div>

@@ -8,10 +8,15 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useAppSelector } from "@/hooks/redux";
+import { getMenus } from "@/lib/axios/menus";
+import { useQuery } from "@tanstack/react-query";
 
 function GeneralSetting() {
-  const { data } = useAppSelector((state) => state.menus);
+  const menus = useQuery({
+    queryKey: ["menus"],
+    queryFn: () => getMenus(),
+    refetchInterval: 1000 * 60 * 5,
+  });
 
   return (
     <div className="p-2">
@@ -33,7 +38,7 @@ function GeneralSetting() {
             <h1 className="font-bold">Menus</h1>
           </DialogHeader>
           <div className="h-[25rem]">
-            <MenuDataTable columns={menuColumns} data={data} />
+            <MenuDataTable columns={menuColumns} data={menus.data || []} />
           </div>
           <DialogFooter>
             <DialogClose asChild>

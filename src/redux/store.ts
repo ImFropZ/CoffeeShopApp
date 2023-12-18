@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./user/userSlice";
-import menuReducer from "./menu/menuSlice";
 import orderReducer from "./order/orderSlice";
 import stockReducer from "./stock/stockSlice";
 import customerReducer from "./customer/customerSlice";
@@ -8,7 +7,6 @@ import customerReducer from "./customer/customerSlice";
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    menus: menuReducer,
     orders: orderReducer,
     stocks: stockReducer,
     customers: customerReducer,

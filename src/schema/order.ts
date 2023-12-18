@@ -7,6 +7,7 @@ export const menuItemOrderSchema = z.object({
   sugar: z.number().min(0).max(1),
   ice: z.number().min(0).max(1),
   cupSize: cupSizeSchema,
+  attributes: z.string(),
 });
 
 export const placeOrderSchema = z.object({

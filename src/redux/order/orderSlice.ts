@@ -15,6 +15,11 @@ const orderSlice = createSlice({
   name: "order",
   initialState,
   reducers: {
+    resetOrder: (state) => {
+      state.customerId = "";
+      state.menus = [];
+      orderSlice.caseReducers.storeInLocalStorage(state);
+    },
     setCustomer: (state, action: PayloadAction<string>) => {
       const customerId = z.string().uuid().parse(action.payload);
       state.customerId = customerId;
