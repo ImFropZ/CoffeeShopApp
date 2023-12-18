@@ -13,7 +13,7 @@ RUN pnpm install
 # Bundle app source
 COPY . .
 
-# Expose port 3000
+# Expose port 1420
 EXPOSE 1420
 
 # Run the app
