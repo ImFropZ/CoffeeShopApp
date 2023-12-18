@@ -35,6 +35,7 @@ import {
 } from "../ui/select";
 import { useMutation } from "@tanstack/react-query";
 import { createMenu } from "@/lib/axios/menus";
+import { queryClient } from "@/main";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -52,6 +53,9 @@ export function MenuDataTable<TData, TValue>({
       drinkType: "COLD" | "HOT" | "FRAPPE";
       categories: string;
     }) => createMenu(newMenu),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["menus"] });
+    },
   });
   const [newMenu, setNewMenu] = useState({
     name: "",

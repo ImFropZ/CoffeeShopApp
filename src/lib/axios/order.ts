@@ -14,6 +14,7 @@ export type OrderParams = {
 
 export async function placeOrder(data: OrderParams) {
   if (data.menus.length === 0) return;
+  data.discount = data.discount / 100;
 
   return await jsonAxios
     .post<{ data: string }>("/orders", data)

@@ -25,6 +25,7 @@ import {
 import { MenuItemsDialogContent } from "..";
 import { updateMenu } from "@/lib/axios/menus";
 import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/main";
 
 export const menuColumns: ColumnDef<z.infer<typeof menuSchema>>[] = [
   {
@@ -84,6 +85,9 @@ export const menuColumns: ColumnDef<z.infer<typeof menuSchema>>[] = [
           drinkType?: "COLD" | "HOT" | "FRAPPE";
           categories?: string;
         }) => updateMenu(id, newMenu),
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["menus"] });
+        },
       });
 
       const [newMenu, setNewMenu] = useState({

@@ -16,9 +16,7 @@ export const invoiceItemSchema = z.object({
   sugar: z.preprocess((val) => Number(val), z.number()),
   ice: z.preprocess((val) => Number(val), z.number()),
   price: z.preprocess((val) => Number(val), z.number()),
-  attribute: z.string(),
-  menuId: z.string(),
-  invoiceId: z.string(),
+  attributes: z.string(),
 });
 
 export const customerSchema = z.object({
@@ -39,5 +37,7 @@ export const invoiceSchema = z.object({
   cashier: userSchema,
   createdAt: z.string(),
   customer: customerSchema.or(z.null()),
+  discount: z.preprocess((val) => Number(val), z.number()),
+  total: z.preprocess((val) => Number(val), z.number()),
   items: z.array(invoiceItemSchema),
 });

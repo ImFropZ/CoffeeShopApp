@@ -15,7 +15,6 @@ function GeneralSetting() {
   const menus = useQuery({
     queryKey: ["menus"],
     queryFn: () => getMenus(),
-    refetchInterval: 1000 * 60 * 5,
   });
 
   return (

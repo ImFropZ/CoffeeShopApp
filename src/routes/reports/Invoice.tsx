@@ -43,13 +43,12 @@ function InvoiceReport() {
     "daily" | "weekly" | "monthly" | "yearly" | "custom"
   >("daily");
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["todos", date],
+  const { data } = useQuery({
+    queryKey: ["inovices", date],
     queryFn: () => getInvoices(date),
   });
 
   console.log(data);
-  console.log(error);
 
   return (
     <div className="grid h-full grid-rows-[auto,1fr] p-2">

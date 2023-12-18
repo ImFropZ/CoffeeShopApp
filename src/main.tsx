@@ -17,7 +17,7 @@ document.addEventListener("keydown", (event) => {
 
 ChartJS.register(ArcElement, Tooltip);
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

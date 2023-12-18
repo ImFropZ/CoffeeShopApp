@@ -30,7 +30,7 @@ export const invoiceColumns: ColumnDef<z.infer<typeof invoiceSchema>>[] = [
   {
     header: "Discount%",
     cell: ({ cell }) => {
-      return <div>{0}</div>;
+      return <div>{cell.row.original.discount * 100}</div>;
     },
   },
   {
