@@ -78,7 +78,6 @@ const userSlice = createSlice({
       state.isLogin = false;
     });
     builders.addCase(login.fulfilled, (state, action) => {
-<<<<<<< HEAD
       const { fullName, email, role, username, picture } = action.payload;
       state.isLogin = true;
 
@@ -88,14 +87,6 @@ const userSlice = createSlice({
       state.isLogin = true;
       state.role = role;
       state.picture.url = picture.url;
-=======
-      state.isLogin = true;
-
-      state.fullName = action.payload.fullName;
-      state.username = action.payload.username;
-      state.email = action.payload.email;
-      state.role = action.payload.role;
->>>>>>> cf82b8e98c0da99b8d85a2d6b775d0b170072f1c
     });
     builders.addCase(login.rejected, (state) => {
       state.isLogin = false;
