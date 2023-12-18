@@ -14,3 +14,13 @@ export async function toggleFullscreen() {
     appWindow.setFullscreen(false);
   }
 }
+
+export async function addToLocalStorage<T>(key: string, items: T) {
+  localStorage.setItem(key, JSON.stringify(items));
+}
+
+export async function getFromLocalStorage<T>(key: string) {
+  const value = localStorage.getItem(key);
+  if (!value) return null;
+  return JSON.parse(value) as T;
+}

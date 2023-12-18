@@ -21,6 +21,7 @@ function CheckoutItem({
   ice,
   sugar,
   quantity,
+  attributes,
 }: CheckoutItemProps) {
   const dispatch = useAppDispatch();
   const [isImageLoaded, setImageLoaded] = useState<boolean>(false);
@@ -45,6 +46,7 @@ function CheckoutItem({
           <p className="text-stone-500">
             {cupSize} - {ice} - {sugar}
           </p>
+          <p className="text-stone-500">{attributes}</p>
         </div>
         <div className="ml-auto">${price}</div>
       </div>
@@ -55,7 +57,9 @@ function CheckoutItem({
             className="rounded-full bg-slate-200 p-2"
             disabled={quantity < 2}
             onClick={() => {
-              dispatch(decreaseQtyToOrder({ id, cupSize, ice, sugar }));
+              dispatch(
+                decreaseQtyToOrder({ id, cupSize, ice, sugar, attributes }),
+              );
             }}
           >
             <LuChevronLeft />
@@ -64,7 +68,9 @@ function CheckoutItem({
           <button
             className="rounded-full bg-slate-200 p-2"
             onClick={() => {
-              dispatch(increaseQtyToOrder({ id, cupSize, ice, sugar }));
+              dispatch(
+                increaseQtyToOrder({ id, cupSize, ice, sugar, attributes }),
+              );
             }}
           >
             <LuChevronRight />
@@ -81,6 +87,7 @@ function CheckoutItem({
                 cupSize,
                 ice,
                 sugar,
+                attributes,
               }),
             );
           }}

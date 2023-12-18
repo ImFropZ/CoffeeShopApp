@@ -7,6 +7,7 @@ import { toggleFullscreen } from "./lib/utils";
 import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "F11") {
@@ -16,12 +17,16 @@ document.addEventListener("keydown", (event) => {
 
 ChartJS.register(ArcElement, Tooltip);
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
-      <HashRouter>
-        <App />
-      </HashRouter>
+      <QueryClientProvider client={queryClient}>
+        <HashRouter>
+          <App />
+        </HashRouter>
+      </QueryClientProvider>
     </Provider>
   </React.StrictMode>,
 );

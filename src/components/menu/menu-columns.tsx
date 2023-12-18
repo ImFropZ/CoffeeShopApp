@@ -23,8 +23,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import { MenuItemsDialogContent } from "..";
-import { useAppDispatch } from "@/hooks/redux";
-import { changeMenu } from "@/redux";
+import { updateMenu } from "@/lib/axios/menus";
+import { useMutation } from "@tanstack/react-query";
 
 export const menuColumns: ColumnDef<z.infer<typeof menuSchema>>[] = [
   {
@@ -75,8 +75,16 @@ export const menuColumns: ColumnDef<z.infer<typeof menuSchema>>[] = [
   {
     header: "Actions",
     cell: ({ cell }) => {
-      const dispatch = useAppDispatch();
       const { id, name, drinkType, categories, menuItems } = cell.row.original;
+
+      const { mutate } = useMutation({
+        mutationKey: ["menus"],
+        mutationFn: (newMenu: {
+          name?: string;
+          drinkType?: "COLD" | "HOT" | "FRAPPE";
+          categories?: string;
+        }) => updateMenu(id, newMenu),
+      });
 
       const [newMenu, setNewMenu] = useState({
         name: name,
@@ -93,7 +101,7 @@ export const menuColumns: ColumnDef<z.infer<typeof menuSchema>>[] = [
           return;
         }
 
-        dispatch(changeMenu({ id, item: newMenu }));
+        mutate(newMenu);
       };
 
       return (

@@ -33,8 +33,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useAppDispatch } from "@/hooks/redux";
-import { addMenu } from "@/redux";
+import { useMutation } from "@tanstack/react-query";
+import { createMenu } from "@/lib/axios/menus";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,7 +45,14 @@ export function MenuDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const dispatch = useAppDispatch();
+  const { mutate } = useMutation({
+    mutationKey: ["menuItems"],
+    mutationFn: (newMenu: {
+      name: string;
+      drinkType: "COLD" | "HOT" | "FRAPPE";
+      categories: string;
+    }) => createMenu(newMenu),
+  });
   const [newMenu, setNewMenu] = useState({
     name: "",
     drinkType: "COLD" as "COLD" | "HOT" | "FRAPPE",
@@ -72,16 +79,7 @@ export function MenuDataTable<TData, TValue>({
   };
 
   const onSubmit = () => {
-    dispatch(
-      addMenu({
-        name: newMenu.name,
-        drinkType: newMenu.drinkType,
-        categories: newMenu.categories
-          .split(",")
-          .map((category) => category.trim())
-          .join(""),
-      }),
-    );
+    mutate(newMenu);
     resetFormValue();
   };
 

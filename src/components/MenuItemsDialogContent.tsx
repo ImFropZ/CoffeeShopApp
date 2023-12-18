@@ -9,10 +9,10 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
-import { useAppDispatch } from "@/hooks/redux";
-import { updateMenuItems } from "@/redux";
 import { z } from "zod";
 import { menuItemSchema } from "@/schema/menus";
+import { useMutation } from "@tanstack/react-query";
+import { updateMenuItems } from "@/lib/axios/menus";
 
 interface MenuItemsProps {
   menuId: string;
@@ -29,42 +29,37 @@ export default function MenuItemsDialogContent({
   menuId,
   items: _items,
 }: MenuItemsProps) {
-  const dispatch = useAppDispatch();
+  const { mutate } = useMutation({
+    mutationKey: ["menuItems", menuId],
+    mutationFn: (
+      newItems: {
+        id: string;
+        cupSize: "SMALL" | "MEDIUM" | "LARGE";
+        price?: number;
+        picture?: File;
+        isActive: boolean;
+      }[],
+    ) => updateMenuItems(menuId, newItems),
+  });
 
   const [items, setItems] = useState(
-    [..._items]
-      .sort((a) => {
-        if (a.cupSize === "SMALL") return -1;
-        if (a.cupSize === "MEDIUM") return 0;
-        if (a.cupSize === "LARGE") return 1;
-        return 0;
-      })
-      .map((item) => {
-        return { ...item, pictureFile: undefined } as z.infer<
-          typeof menuItemSchema
-        > & {
-          pictureFile: File | undefined;
-        };
-      }),
+    _items.map((item) => {
+      return { ...item, pictureFile: undefined } as z.infer<
+        typeof menuItemSchema
+      > & {
+        pictureFile: File | undefined;
+      };
+    }),
   );
 
   const onSaveHandler = () => {
-    if (items) {
-      dispatch(
-        updateMenuItems({
-          id: menuId,
-          items: items.map((i) => {
-            return {
-              id: i.id,
-              cupSize: i.cupSize,
-              price: i.price,
-              image: i.pictureFile,
-              isActive: i.isActive,
-            };
-          }),
-        }),
-      );
-    }
+    mutate(
+      items.map((item) => ({
+        ...item,
+        picture: item.pictureFile,
+        pictureFile: undefined,
+      })),
+    );
   };
 
   return (

@@ -22,10 +22,13 @@ export type UpdateMenuItem = {
   isActive?: boolean;
 };
 
-export async function getMenus() {
+export async function getMenus(category?: string) {
+  const params = {
+    category: category ? category : "",
+  };
   return await jsonAxios
-    .get<{ data: Array<z.infer<typeof menuSchema>> }>("/menus")
-    .then((res) => res.data);
+    .get<{ data: Array<z.infer<typeof menuSchema>> }>("/menus", { params })
+    .then((res) => res.data.data);
 }
 
 export async function createMenu(data: CreateMenu) {
@@ -41,18 +44,25 @@ export async function updateMenu(id: string, data: UpdateMenu) {
 }
 
 export async function updateMenuItems(id: string, data: UpdateMenuItem[]) {
-  const promises = data.map((item) => {
-    const form = new FormData();
-    form.append("id", item.id);
-    if (item.price) form.append("price", item.price.toString());
-    if (item.image) form.append("image", item.image);
-    if (item.isActive) form.append("isActive", item.isActive.toString());
+  const form = new FormData();
 
-    return formAxios.put<z.infer<typeof menuSchema>>(
-      "/menus/" + id + "/items",
-      item,
-    );
+  data.forEach((item, index) => {
+    Object.keys(item).forEach((key) => {
+      // @ts-ignore
+      if (!item[key]) {
+        return;
+      }
+
+      form.append(
+        `items[${index}][${key}]`,
+        // @ts-ignore
+        item[key] instanceof File ? item[key] : item[key].toString(),
+      );
+    });
   });
 
-  return Promise.all(promises).then((res) => res.map((r) => r.data));
+  return await formAxios.put<{ data: z.infer<typeof menuSchema> }>(
+    "/menus/" + id + "/items",
+    form,
+  );
 }
