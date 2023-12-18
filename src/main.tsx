@@ -15,8 +15,6 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-const queryClient = new QueryClient();
-
 ChartJS.register(ArcElement, Tooltip);
 
 const queryClient = new QueryClient();
