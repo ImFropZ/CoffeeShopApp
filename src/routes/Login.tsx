@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { login as authLogin } from "@/redux";
 import { useAppDispatch } from "@/hooks/redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -46,10 +46,7 @@ function Login() {
   return (
     <div className="absolute inset-0 flex h-screen justify-center pt-10">
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="max-w-xl space-y-8"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-xl">
           <FormField
             control={form.control}
             name="username"
@@ -79,8 +76,14 @@ function Login() {
               </FormItem>
             )}
           />
-          <div className="flex justify-end">
-            <Button type="submit" className="ml-auto">
+          <Link
+            to="/forgot-password"
+            className="my-2 inline-block w-full text-center text-stone-500 underline"
+          >
+            Forgot password?
+          </Link>
+          <div className="flex justify-end w-full">
+            <Button type="submit" className="ml-auto w-full">
               Login
             </Button>
           </div>

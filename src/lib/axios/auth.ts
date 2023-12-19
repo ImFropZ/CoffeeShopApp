@@ -31,3 +31,21 @@ export async function updateProfile(data: FormData) {
     .put<z.infer<typeof profileSchema>>("/auth/me", data)
     .then((res) => res.data);
 }
+
+export async function forgotPassword(data: string) {
+  return jsonAxios
+    .post<{ message: string }>("/auth/forgot-password", {
+      data,
+    })
+    .then((res) => res.data.message);
+}
+
+export async function verifyToken(data: {
+  data: string;
+  newPassword: string;
+  token: string;
+}) {
+  return jsonAxios
+    .post<{ message: string }>("/auth/verify-token", data)
+    .then((res) => res.data.message);
+}

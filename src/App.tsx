@@ -1,5 +1,5 @@
 import { Routes, Route, Outlet, Navigate, useNavigate } from "react-router-dom";
-import { Dashboard, Menu, Stock, Login } from "./routes";
+import { Dashboard, Menu, Stock, Login, ForgotPassword, VerifyCode } from "./routes";
 import { Authentication } from "./routes/helpers";
 import { Default, SettingLayout } from "./layouts";
 import {
@@ -73,6 +73,8 @@ function App() {
         </Route>
       </Route>
       <Route path="/login" element={<Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/verify-code" element={<VerifyCode />} />
     </Routes>
   );
 }
