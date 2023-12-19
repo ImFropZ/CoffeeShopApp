@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { updateProfile } from "@/redux";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   fullName: z
@@ -33,20 +34,21 @@ const formSchema = z.object({
   email: z.string().email({ message: "Invalid email." }).optional(),
   oldPassword: z
     .string()
-    .min(8, {
-      message: "Password must be at least 8 characters.",
+    .min(6, {
+      message: "Password must be at least 6 characters.",
     })
     .optional(),
   newPassword: z
     .string()
-    .min(8, {
-      message: "Password must be at least 8 characters.",
+    .min(6, {
+      message: "Password must be at least 6 characters.",
     })
     .optional(),
 });
 
 function ProfileSetting() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [image, setImage] = useState<File>();
   const { fullName, username, email, role, picture } = useAppSelector(
     (state) => state.user,
@@ -63,18 +65,21 @@ function ProfileSetting() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const form = new FormData();
+    const formData = new FormData();
 
-    if (values.fullName) form.append("fullName", values.fullName);
-    if (values.username) form.append("username", values.username);
-    if (values.email) form.append("email", values.email);
-    if (values.oldPassword) form.append("oldPassword", values.oldPassword);
-    if (values.newPassword) form.append("newPassword", values.newPassword);
-    if (image) form.append("image", image);
+    if (values.fullName) formData.append("fullName", values.fullName);
+    if (values.username) formData.append("username", values.username);
+    if (values.email) formData.append("email", values.email);
+    if (values.oldPassword) formData.append("oldPassword", values.oldPassword);
+    if (values.newPassword) formData.append("newPassword", values.newPassword);
+    if (image) formData.append("image", image);
 
     if (image) console.log(new Blob([image], { type: image.type }));
 
-    dispatch(updateProfile(form));
+    dispatch(updateProfile(formData)).then(() => {
+      form.setValue("oldPassword", "");
+      form.setValue("newPassword", "");
+    });
     setImage(undefined);
   }
 
@@ -202,6 +207,13 @@ function ProfileSetting() {
               </FormItem>
             )}
           />
+          <Button
+            className="col-span-2 underline"
+            variant={"outline"}
+            onClick={() => navigate({ pathname: "/forgot-password" })}
+          >
+            Forgot Password ?
+          </Button>
           <Button type="submit" className="col-span-2">
             Save Changes
           </Button>
