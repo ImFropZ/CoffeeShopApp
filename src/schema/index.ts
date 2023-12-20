@@ -36,7 +36,11 @@ export const userSchema = z.object({
 
 export const invoiceSchema = z.object({
   id: z.string(),
-  cashier: userSchema,
+  cashier: z.object({
+    id: z.string(),
+    fullName: z.string(),
+    email: z.string().or(z.null()),
+  }),
   createdAt: z.string(),
   customer: customerSchema.or(z.null()),
   discount: z.preprocess((val) => Number(val), z.number()),

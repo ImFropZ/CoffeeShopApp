@@ -48,8 +48,6 @@ function InvoiceReport() {
     queryFn: () => getInvoices(date),
   });
 
-  console.log(data);
-
   return (
     <div className="grid h-full grid-rows-[auto,1fr] p-2">
       <div className="flex gap-2 p-2">
