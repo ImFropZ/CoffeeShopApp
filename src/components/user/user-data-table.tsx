@@ -25,6 +25,9 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Label } from "../ui/label";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/main";
+import { register } from "@/lib/axios/auth";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -40,6 +43,22 @@ export function UserDataTable<TData, TValue>({
     username: "",
     email: "",
     password: "",
+  });
+  const { mutate } = useMutation({
+    mutationKey: ["user", "create"],
+    mutationFn: (newUser: {
+      fullName: string;
+      username: string;
+      email: string;
+      password: string;
+    }) =>
+      register({
+        ...newUser,
+        email: newUser.email === "" ? undefined : newUser.email,
+      }),
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
   });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
@@ -63,7 +82,11 @@ export function UserDataTable<TData, TValue>({
   };
 
   const onSubmit = () => {
-    console.log(newUser);
+    if (!newUser.fullName || !newUser.username || !newUser.password) {
+      return;
+    }
+
+    mutate(newUser);
     resetFormValue();
   };
 
@@ -73,9 +96,11 @@ export function UserDataTable<TData, TValue>({
         <div className="flex p-2">
           <Input
             placeholder="Search..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            value={
+              (table.getColumn("fullName")?.getFilterValue() as string) ?? ""
+            }
             onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
+              table.getColumn("fullName")?.setFilterValue(event.target.value)
             }
             className="m-2 w-1/3 text-lg"
           />

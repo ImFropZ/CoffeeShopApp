@@ -29,6 +29,8 @@ export const customerSchema = z.object({
 export const userSchema = z.object({
   id: z.string(),
   fullName: z.string(),
+  username: z.string(),
+  role: roleSchema,
   email: z.string().or(z.null()),
 });
 

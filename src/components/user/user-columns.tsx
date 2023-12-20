@@ -1,18 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { LuPen, LuTrash } from "react-icons/lu";
-import { Link } from "react-router-dom";
+import { LuPen } from "react-icons/lu";
 import { Button } from "../ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../ui/alert-dialog";
 import {
   Dialog,
   DialogClose,
@@ -30,117 +18,139 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { roleSchema, userSchema } from "@/schema";
+import { z } from "zod";
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { UpdateUser, updateUser } from "@/lib/axios/users";
+import { queryClient } from "@/main";
 
-export type User = {
-  id: string;
-  name: string;
-  permission: string;
-  picture: string;
-};
-
-export const userColumns: ColumnDef<User>[] = [
+export const userColumns: ColumnDef<z.infer<typeof userSchema>>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
+    accessorKey: "fullName",
+    header: "Display Name",
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "username",
+    header: "Username",
   },
   {
-    accessorKey: "permission",
-    header: "Permission",
+    accessorKey: "email",
+    header: "Email",
   },
   {
-    header: "Picture",
-    cell: ({ cell }) => (
-      <Link to={cell.row.original.picture} target="_blank">
-        View Picture
-      </Link>
-    ),
+    accessorKey: "role",
+    header: "Role",
   },
   {
     header: "Actions",
-    cell: () => {
+    cell: ({ cell }) => {
+      const user = cell.row.original;
+
+      const { mutate } = useMutation({
+        mutationKey: ["updateUser"],
+        mutationFn: (uUser: UpdateUser) =>
+          updateUser(user.username, {
+            ...(uUser.email ? { email: uUser.email } : {}),
+            ...(uUser.fullName ? { fullName: uUser.fullName } : {}),
+            ...(uUser.newPassword ? { newPassword: uUser.newPassword } : {}),
+            role: uUser.role,
+          }),
+        onSuccess() {
+          queryClient.invalidateQueries({ queryKey: ["users"] });
+        },
+      });
+
+      const [username, setUsername] = useState(user.username ?? "");
+      const [email, setEmail] = useState(user.email ?? "");
+      const [newPassword, setNewPassword] = useState("");
+      const [fullName, setFullName] = useState(user.fullName ?? "");
+      const [role, setRole] = useState<z.infer<typeof roleSchema>>(user.role);
+
+      const onSaveChange = () => {
+        mutate({
+          newPassword,
+          fullName,
+          email,
+          role,
+        });
+      };
+
       return (
         <Dialog>
-          <AlertDialog>
-            <div className="flex gap-4">
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="bg-green-500 text-white hover:bg-green-600 hover:text-white"
-                >
-                  <LuPen />
-                </Button>
-              </DialogTrigger>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="bg-red-500 text-white hover:bg-red-600 hover:text-white"
-                >
-                  <LuTrash />
-                </Button>
-              </AlertDialogTrigger>
-            </div>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edit User</DialogTitle>
-                <DialogDescription>
-                  Update your user information.
-                </DialogDescription>
-                <div className="relative">
-                  <div className="flex gap-5">
-                    <div className="flex items-center gap-2">
-                      <Label>Picture</Label>
-                      <Input type="file" />
-                    </div>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a permission" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Permissions</SelectLabel>
-                          <SelectItem value="admin">Admin</SelectItem>
-                          <SelectItem value="cashier">Cashier</SelectItem>
-                          <SelectItem value="stockManager">
-                            Stock Manager
-                          </SelectItem>
-                          <SelectItem value="accounting">Accounting</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Label>Name</Label>
-                  <Input defaultValue={"Lim Tangmeng"} />
-                  <Label>Password</Label>
-                  <Input type="password" />
+          <div className="flex gap-4">
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="bg-green-500 text-white hover:bg-green-600 hover:text-white"
+              >
+                <LuPen />
+              </Button>
+            </DialogTrigger>
+          </div>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit User</DialogTitle>
+              <DialogDescription>
+                Update your user information.
+              </DialogDescription>
+              <div className="relative">
+                <Label>Full Name</Label>
+                <Input
+                  value={fullName}
+                  onChange={(e) => setFullName(e.currentTarget.value)}
+                />
+                <Label>Username</Label>
+                <Input
+                  value={username}
+                  onChange={(e) => setUsername(e.currentTarget.value)}
+                />
+                <Label>Email</Label>
+                <Input
+                  value={email}
+                  onChange={(e) => setEmail(e.currentTarget.value)}
+                />
+                <Label>Role</Label>
+                <div className="my-2 flex gap-5">
+                  <Select
+                    value={role}
+                    onValueChange={(value: z.infer<typeof roleSchema>) =>
+                      setRole(value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="ADMIN">Admin</SelectItem>
+                        <SelectItem value="CASHIER">Cashier</SelectItem>
+                        <SelectItem value="STOCK">Stock</SelectItem>
+                        <SelectItem value="USER">User</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button type="submit">Save changes</Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogHeader>
-            </DialogContent>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action can not be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+
+                <Label>Password</Label>
+                <Input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.currentTarget.value)}
+                />
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button type="submit" onClick={onSaveChange}>
+                    Save changes
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogHeader>
+          </DialogContent>
         </Dialog>
       );
     },
