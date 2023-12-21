@@ -10,15 +10,6 @@ export const cupSizeSchema = z.enum(["SMALL", "MEDIUM", "LARGE"]);
 
 export const drinkTypeSchema = z.enum(["COLD", "HOT", "FRAPPE"]);
 
-export const invoiceItemSchema = z.object({
-  id: z.string(),
-  quantity: z.preprocess((val) => Number(val), z.number()),
-  sugar: z.preprocess((val) => Number(val), z.number()),
-  ice: z.preprocess((val) => Number(val), z.number()),
-  price: z.preprocess((val) => Number(val), z.number()),
-  attributes: z.string(),
-});
-
 export const customerSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -44,6 +35,18 @@ export const invoiceSchema = z.object({
   createdAt: z.string(),
   customer: customerSchema.or(z.null()),
   discount: z.preprocess((val) => Number(val), z.number()),
+  subTotal: z.preprocess((val) => Number(val), z.number()),
   total: z.preprocess((val) => Number(val), z.number()),
-  items: z.array(invoiceItemSchema),
+  items: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      cupSize: cupSizeSchema,
+      quantity: z.preprocess((val) => Number(val), z.number()),
+      sugar: z.preprocess((val) => Number(val), z.number()),
+      ice: z.preprocess((val) => Number(val), z.number()),
+      price: z.preprocess((val) => Number(val), z.number()),
+      attributes: z.string(),
+    }),
+  ),
 });
