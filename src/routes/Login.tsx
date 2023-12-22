@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { login as authLogin } from "@/redux";
 import { useAppDispatch } from "@/hooks/redux";
 import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -38,7 +39,12 @@ function Login() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const { username, password } = values;
-    dispatch(authLogin({ data: username, password })).then(() => {
+    dispatch(authLogin({ data: username, password })).then((data) => {
+      if (data.type.includes("rejected")) {
+        toast.error("Login failed");
+        return;
+      }
+      toast.success("Login success");
       navigate("/");
     });
   }
@@ -46,7 +52,13 @@ function Login() {
   return (
     <div className="absolute inset-0 flex h-screen justify-center pt-10">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-xl">
+        <form
+          onSubmit={form.handleSubmit((data, e) => {
+            e?.preventDefault();
+            onSubmit(data);
+          })}
+          className="max-w-xl"
+        >
           <FormField
             control={form.control}
             name="username"
@@ -82,7 +94,7 @@ function Login() {
           >
             Forgot password?
           </Link>
-          <div className="flex justify-end w-full">
+          <div className="flex w-full justify-end">
             <Button type="submit" className="ml-auto w-full">
               Login
             </Button>

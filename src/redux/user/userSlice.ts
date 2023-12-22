@@ -88,9 +88,6 @@ const userSlice = createSlice({
       state.role = role;
       state.picture.url = picture.url;
     });
-    builders.addCase(login.rejected, (state) => {
-      state.isLogin = false;
-    });
     builders.addCase(updateProfile.fulfilled, (state, action) => {
       const { fullName, email, role, username, picture } = action.payload;
 
