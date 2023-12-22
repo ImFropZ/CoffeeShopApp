@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { forgotPassword } from "@/lib/axios/auth";
+import toast from "react-hot-toast";
 
 function ForgotPassword() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ function ForgotPassword() {
     mutationFn: (value: string) => forgotPassword(value),
     onSuccess() {
       setValue("");
+      toast.success("Email sent");
       navigate(
         { pathname: "/verify-code", search: `login=${value}` },
         { replace: true },
