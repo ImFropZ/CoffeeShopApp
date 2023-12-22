@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { forgotPassword, verifyToken } from "@/lib/axios/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 function VerifyCode() {
@@ -31,7 +32,11 @@ function VerifyCode() {
         token,
       }),
     onSuccess() {
+      toast.success("Password changed");
       navigate("/");
+    },
+    onError() {
+      toast.error("Invalid token");
     },
   });
 
