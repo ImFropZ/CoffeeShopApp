@@ -77,7 +77,9 @@ export const invoiceColumns: ColumnDef<z.infer<typeof invoiceSchema>>[] = [
                 <tbody>
                   {items.map((item) => {
                     return (
-                      <tr>
+                      <tr
+                        key={`${item.id}-${item.cupSize}-${item.ice}-${item.price}-${item.attributes}-${item.sugar}`}
+                      >
                         <td className="py-2">
                           {item.name} - {item.cupSize}
                         </td>

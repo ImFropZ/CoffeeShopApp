@@ -33,6 +33,7 @@ import { Pie } from "react-chartjs-2";
 import { DateRange } from "react-day-picker";
 import { FaFileExcel, FaGreaterThan, FaLessThan } from "react-icons/fa6";
 import { useQuery } from "@tanstack/react-query";
+import { useExcel } from "@/hooks/excel";
 
 function InvoiceReport() {
   const [date, setDate] = useState<DateRange>({
@@ -47,6 +48,68 @@ function InvoiceReport() {
     queryKey: ["inovices", date],
     queryFn: () => getInvoices(date),
   });
+
+  const { setFileName, saveFile } = useExcel([
+    {
+      header: "ID",
+      key: "id",
+    },
+    {
+      header: "Cashier",
+      key: "cashier",
+    },
+    {
+      header: "Customer",
+      key: "customer",
+    },
+    {
+      header: "Sub Total",
+      key: "subTotal",
+    },
+    {
+      header: "Discount",
+      key: "discount",
+    },
+    {
+      header: "Total",
+      key: "total",
+    },
+    {
+      header: "Items Name",
+      key: "itemName",
+    },
+    {
+      header: "Items Cup Size",
+      key: "itemCupSize",
+    },
+    {
+      header: "Items Quantity",
+      key: "itemQuantity",
+    },
+    {
+      header: "Items Sugar",
+      key: "itemSugar",
+    },
+    {
+      header: "Items Ice",
+      key: "itemIce",
+    },
+    {
+      header: "Items Price",
+      key: "itemPrice",
+    },
+    {
+      header: "Items Attributes",
+      key: "itemAttributes",
+    },
+    {
+      header: "Created At",
+      key: "createdAt",
+    },
+  ]);
+
+  if (data) {
+  }
 
   return (
     <div className="grid h-full grid-rows-[auto,1fr] p-2">
@@ -217,7 +280,43 @@ function InvoiceReport() {
             data-active={reportType === "custom" ? true : undefined}
           />
         </Tabs>
-        <Button variant="outline">
+        <Button
+          variant="outline"
+          onClick={() => {
+            if (!data) return;
+            const excelData = data
+              .map((invoice) => {
+                return invoice.items.map((item) => {
+                  return {
+                    id: invoice.id,
+                    cashier: invoice.cashier.fullName,
+                    customer: invoice.customer?.name || "Guest",
+                    subTotal: invoice.subTotal,
+                    discount: invoice.discount,
+                    total: invoice.total,
+                    itemName: item.name,
+                    itemCupSize: item.cupSize,
+                    itemQuantity: item.quantity,
+                    itemSugar: item.sugar,
+                    itemIce: item.ice,
+                    itemPrice: item.price,
+                    itemAttributes: item.attributes,
+                    createdAt: format(new Date(invoice.createdAt), "dd/MM/yyyy HH:mm:ss"),
+                  };
+                });
+              })
+              .flat();
+
+            setFileName(
+              `invoices-${format(date.from || new Date(), "d_M_u")}-${format(
+                date.to || new Date(),
+                "d_M_u",
+              )}.xlsx`,
+            );
+            saveFile(excelData);
+          }}
+          disabled={!data}
+        >
           <FaFileExcel className="scale-125 text-green-700" />
         </Button>
       </div>
